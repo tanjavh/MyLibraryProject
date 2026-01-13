@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Kreiraj knjigu</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Kreiraj novu knjigu</h1>
+
+<div th:if="${error}" style="color:red">
+  <p th:text="${error}"></p>
+</div>
+
+<form th:action="@{/books/create}" th:object="${book}" method="post">
+
+  <div>
+    <label>Naslov:</label>
+    <input type="text" th:field="*{title}" required/>
+  </div>
+
+  <div>
+    <label>Izaberite autora:</label>
+    <select th:field="*{authorId}">
+      <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
+    </select>
+    <br>
+    <label>ILI dodajte novog autora:</label>
+    <input type="text" th:field="*{newAuthorName}"/>
+  </div>
+
+  <div>
+    <label>Kategorija:</label>
+    <select th:field="*{category}">
+      <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"></option>
+    </select>
+  </div>
+
+  <div>
+    <label>Godina:</label>
+    <input type="number" th:field="*{year}" min="1000" max="2100" required/>
+  </div>
+
+  <button type="submit">Kreiraj knjigu</button>
+</form>
+
+<a th:href="@{/books}">Nazad na sve knjige</a>
+</body>
+</html>

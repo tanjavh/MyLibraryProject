@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Kreiraj autora</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Kreiraj autora</h1>
+<form th:action="@{/authors/create}" th:object="${author}" method="post">
+  <div>
+    <label>Ime autora:</label>
+    <input type="text" th:field="*{name}" required/>
+  </div>
+  <button type="submit">Kreiraj</button>
+</form>
+<a th:href="@{/authors}">Nazad na sve autore</a>
+</body>
+</html>

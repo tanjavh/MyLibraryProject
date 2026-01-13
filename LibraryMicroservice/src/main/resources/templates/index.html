@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Online Library</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>Online Library</h1>
+    <nav>
+        <a th:href="@{/}">Početna</a> |
+        <a th:href="@{/users/login}">Login</a> |
+        <a th:href="@{/users/register}">Registracija</a>
+    </nav>
+    <hr>
+</header>
+
+<main>
+    <h2>Dobrodošli u Online Library!</h2>
+    <p>
+        Prijavite se ili registrujte kako biste pristupili knjigama i svojim pozajmicama.
+    </p>
+
+    <div>
+        <a th:href="@{/users/login}"><button>Prijavi se</button></a>
+        <a th:href="@{/users/register}"><button>Registracija</button></a>
+    </div>
+</main>
+
+<footer>
+    <hr>
+    <p>&copy; 2026 Online Library</p>
+</footer>
+</body>
+</html>

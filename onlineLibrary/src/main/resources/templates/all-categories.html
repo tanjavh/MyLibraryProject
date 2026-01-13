@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sve kategorije</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Sve kategorije</h1>
+
+<a th:href="@{/categories/create}">Dodaj novu kategoriju</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Naziv</th>
+        <th>Akcije</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categories}">
+        <td th:text="${category.id}">ID</td>
+        <td th:text="${category.name}">Naziv</td>
+        <td>
+            <form th:action="@{'/categories/delete/' + ${category.id}}" method="post">
+                <button type="submit">Obriši</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/}">Nazad na početnu</a>
+</body>
+</html>

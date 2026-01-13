@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Kreiraj pozajmicu</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Kreiraj novu pozajmicu</h1>
+
+<form th:action="@{/loans/create}" method="post">
+  <div>
+    <label for="user">Korisnik:</label>
+    <select id="user" name="userId" required>
+      <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"></option>
+    </select>
+  </div>
+
+  <div>
+    <label for="book">Knjiga:</label>
+    <select id="book" name="bookId" required>
+      <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
+    </select>
+  </div>
+
+  <div>
+    <button type="submit">Kreiraj pozajmicu</button>
+  </div>
+</form>
+
+<a th:href="@{/loans/all}">Nazad na sve pozajmice</a>
+</body>
+</html>

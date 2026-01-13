@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Online Library - Početna</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- UBACUJEMO NAV FRAGMENT -->
+<header th:replace="fragments/nav :: nav"></header>
+
+<main>
+  <h2>
+    Dobrodošli,
+    <span th:text="${#authentication.name}">Korisniče</span>!
+  </h2>
+
+  <p>
+    Ovde možete pregledati knjige, praviti pozajmice i pratiti svoje pozajmice.
+  </p>
+
+  <section>
+    <h3>Brzi linkovi</h3>
+    <ul>
+      <li>
+        <a th:href="@{/books}">Pregled svih knjiga</a>
+      </li>
+
+      <li>
+        <a th:href="@{/loans/my}">Moje pozajmice</a>
+      </li>
+
+      <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <a th:href="@{/loans/all}">Sve pozajmice (Admin)</a>
+      </li>
+
+      <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <a th:href="@{/users}">Korisnici (Admin)</a>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <hr>
+  <p>&copy; 2026 Online Library</p>
+</footer>
+
+</body>
+</html>

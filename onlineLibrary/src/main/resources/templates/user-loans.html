@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Moje pozajmice</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Moje pozajmice</h1>
+
+<!-- Flash poruke -->
+<div th:if="${success}" class="flash-success" th:text="${success}"></div>
+<div th:if="${error}" class="flash-error" th:text="${error}"></div>
+
+<table>
+  <thead>
+  <tr>
+    <th>Knjiga</th>
+    <th>Autor</th>
+    <th>Kategorija</th>
+    <th>Datum pozajmice</th>
+    <th>Vraćena</th>
+    <th>Datum vraćanja</th>
+    <th>Akcija</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="loan : ${loans}">
+    <td th:text="${loan.bookTitle}">Knjiga</td>
+    <td th:text="${loan.bookAuthor}">Autor</td>
+    <td th:text="${loan.bookCategory}">Kategorija</td>
+    <td th:text="${loan.loanDate}">Datum pozajmice</td>
+    <td th:text="${loan.returned} ? 'Da' : 'Ne'">Vraćena</td>
+    <td th:text="${loan.returnDate}">Datum vraćanja</td>
+    <td>
+      <form th:if="${!loan.returned}" th:action="@{'/loans/return/' + ${loan.loanId}}" method="post">
+        <button type="submit">Vrati knjigu</button>
+      </form>
+      <span th:if="${loan.returned}">Vraćeno</span>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

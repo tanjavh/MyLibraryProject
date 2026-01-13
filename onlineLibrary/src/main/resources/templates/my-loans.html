@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Moje pozajmice</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Moje pozajmice</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Knjiga</th>
+    <th>Datum pozajmice</th>
+    <th>Vraćena</th>
+    <th>Datum vraćanja</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="loan : ${loans}">
+    <td th:text="${loan.book.title}">Knjiga</td>
+    <td th:text="${loan.loanDate}">Datum pozajmice</td>
+    <td th:text="${loan.returned}">Vraćena</td>
+    <td th:text="${loan.returnDate}">Datum vraćanja</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

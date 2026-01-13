@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Kreiraj rolu</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Kreiraj rolu</h1>
+<form th:action="@{/roles/create}" th:object="${role}" method="post">
+  <div>
+    <label>Naziv role:</label>
+    <input type="text" th:field="*{name}" required/>
+  </div>
+  <button type="submit">Kreiraj</button>
+</form>
+<a th:href="@{/roles}">Nazad na sve role</a>
+</body>
+</html>

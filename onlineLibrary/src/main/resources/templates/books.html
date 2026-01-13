@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sve knjige</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Knjige</h1>
+
+<div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+  <a th:href="@{/books/create}">➕ Dodaj knjigu</a>
+</div>
+
+<table>
+  <tr th:each="book : ${books}">
+    <td th:text="${book.title}"></td>
+    <td th:text="${book.authorName}"></td>
+
+    <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+      <form th:action="@{'/books/delete/' + ${book.id}}" method="post">
+        <button>Obriši</button>
+      </form>
+    </td>
+  </tr>
+</table>
+
+
+</body>
+</html>

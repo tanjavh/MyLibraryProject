@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="nav">
+<head></head>
+<body>
+<nav>
+  <ul>
+    <li><a th:href="@{/}">Home</a></li>
+
+    <li th:if="${#authorization.expression('isAuthenticated()')}">
+      <a th:href="@{/books}">Knjige</a>
+    </li>
+
+    <li th:if="${#authorization.expression('isAuthenticated()')}">
+      <a th:href="@{/loans/my}">Moje pozajmice</a>
+    </li>
+
+    <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+      <a th:href="@{/users}">Korisnici</a>
+    </li>
+
+    <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+      <a th:href="@{/loans/all}">Sve pozajmice</a>
+    </li>
+
+    <li th:if="${#authorization.expression('isAnonymous()')}">
+      <a th:href="@{/users/login}">Login</a>
+    </li>
+
+    <li th:if="${#authorization.expression('isAnonymous()')}">
+      <a th:href="@{/users/register}">Register</a>
+    </li>
+
+    <li th:if="${#authorization.expression('isAuthenticated()')}">
+      <form th:action="@{/logout}" method="post" style="display:inline">
+        <button type="submit">Logout</button>
+      </form>
+    </li>
+  </ul>
+</nav>
+</body>
+</html>

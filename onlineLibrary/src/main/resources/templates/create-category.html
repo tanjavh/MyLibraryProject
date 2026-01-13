@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kreiraj kategoriju</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Kreiraj novu kategoriju</h1>
+
+<form th:action="@{/categories/create}" th:object="${category}" method="post">
+    <div>
+        <label>Kategorija:</label>
+        <select th:field="*{category}" required>
+            <option th:each="cat : ${T(com.example.onlineLibrary.model.enums.CategoryName).values()}"
+                    th:value="${cat}" th:text="${cat}"></option>
+        </select>
+    </div>
+    <button type="submit">Kreiraj</button>
+</form>
+
+<a th:href="@{/categories}">Nazad na sve kategorije</a>
+</body>
+</html>

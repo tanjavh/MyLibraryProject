@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Svi autori</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Svi autori</h1>
+<a th:href="@{/authors/create}">Dodaj autora</a>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Ime</th>
+    <th>Akcije</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="author : ${authors}">
+    <td th:text="${author.id}">ID</td>
+    <td th:text="${author.name}">Ime</td>
+    <td>
+      <form th:action="@{'/authors/delete/' + ${author.id}}" method="post">
+        <button type="submit">Obriši</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

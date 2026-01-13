@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sve role</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Sve role</h1>
+<a th:href="@{/roles/create}">Dodaj novu rolu</a>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Naziv role</th>
+    <th>Akcije</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="role : ${roles}">
+    <td th:text="${role.id}">ID</td>
+    <td th:text="${role.name}">Naziv role</td>
+    <td>
+      <form th:action="@{'/roles/delete/' + ${role.id}}" method="post">
+        <button type="submit">Obriši</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

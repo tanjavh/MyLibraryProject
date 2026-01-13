@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Kreiraj korisnika</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Kreiraj korisnika</h1>
+<form th:action="@{/users/create}" th:object="${user}" method="post">
+  <div>
+    <label>Username:</label>
+    <input type="text" th:field="*{username}" required/>
+  </div>
+  <div>
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" required/>
+  </div>
+  <div>
+    <label>Password:</label>
+    <input type="password" th:field="*{password}" required/>
+  </div>
+  <button type="submit">Kreiraj</button>
+</form>
+<a th:href="@{/users}">Nazad na sve korisnike</a>
+</body>
+</html>
