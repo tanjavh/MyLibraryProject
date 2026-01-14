@@ -9,22 +9,20 @@
 
 <form th:action="@{/loans/create}" method="post">
   <div>
-    <label for="user">Korisnik:</label>
-    <select id="user" name="userId" required>
+    <label>Korisnik:</label>
+    <select name="userId" required>
       <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"></option>
     </select>
   </div>
 
   <div>
-    <label for="book">Knjiga:</label>
-    <select id="book" name="bookId" required>
+    <label>Knjiga:</label>
+    <select name="bookId" required>
       <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
     </select>
   </div>
 
-  <div>
-    <button type="submit">Kreiraj pozajmicu</button>
-  </div>
+  <button type="submit">Kreiraj pozajmicu</button>
 </form>
 
 <a th:href="@{/loans/all}">Nazad na sve pozajmice</a>

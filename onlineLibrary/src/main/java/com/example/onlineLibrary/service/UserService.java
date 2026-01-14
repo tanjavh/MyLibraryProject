@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,9 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Korisnik nije pronađen: " + username));
         return new UserPrincipal(user); // UserPrincipal implementira UserDetails
+    }
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
     // Dodatne metode
     public User save(User user) {
@@ -48,4 +52,8 @@ public class UserService implements UserDetailsService {
         userRepository.delete(user);
     }
 
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

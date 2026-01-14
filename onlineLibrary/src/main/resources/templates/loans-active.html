@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Moje pozajmice</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Moje pozajmice</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Knjiga</th>
+        <th>Datum pozajmice</th>
+        <th>Vraćena</th>
+        <th>Datum vraćanja</th>
+        <th>Akcija</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="loan : ${loans}">
+        <td th:text="${loan.bookTitle}">Knjiga</td>
+        <td th:text="${loan.loanDate}">Datum pozajmice</td>
+        <td th:text="${loan.returned} ? 'Da' : 'Ne'">Vraćena</td>
+        <td th:text="${loan.returnDate} != null ? ${loan.returnDate} : '-'">Datum vraćanja</td>
+        <td>
+            <form sec:authorize="isAuthenticated()" th:if="${!loan.returned}"
+                  th:action="@{'/loans/return/' + ${loan.loanId}}" method="post">
+                <button type="submit">Vrati knjigu</button>
+            </form>
+            <span th:if="${loan.returned}">Vraćeno</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

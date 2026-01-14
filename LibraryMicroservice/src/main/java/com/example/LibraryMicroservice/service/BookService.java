@@ -8,8 +8,10 @@ import com.example.LibraryMicroservice.model.entity.Author;
 import com.example.LibraryMicroservice.model.entity.Book;
 import com.example.LibraryMicroservice.model.entity.Category;
 import com.example.LibraryMicroservice.repository.BookRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,9 @@ public class BookService {
 
     // Brisanje knjige po ID-ju
     public void deleteById(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new RuntimeException("Book not found");
+        }
         bookRepository.deleteById(id);
     }
 
@@ -55,8 +60,8 @@ public class BookService {
             author = new Author();
             author.setName(dto.getNewAuthorName());
             author = authorService.save(author);
-        } else if (dto.getAuthorId() != null) {
-            author = authorService.findById(dto.getAuthorId())
+        } else if (dto.getNewAuthorName() != null) {
+            author = authorService.findByName(dto.getNewAuthorName())
                     .orElseThrow(() -> new RuntimeException("Izabrani autor ne postoji!"));
         } else {
             throw new RuntimeException("Morate uneti autora!");
@@ -80,6 +85,7 @@ public class BookService {
 
         return bookRepository.save(book);
     }
+
     public BookInfoResponse toBookInfo(Book book) {
         return BookInfoResponse.builder()
                 .id(book.getId())
@@ -90,11 +96,27 @@ public class BookService {
                 .available(book.isAvailable())
                 .build();
     }
+
     public void updateAvailability(Long bookId, boolean available) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
         book.setAvailable(available);
         bookRepository.save(book);
+    }
+
+
+    public BookInfoResponse getBookById(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        return BookInfoResponse.builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .authorName(book.getAuthor().getName())
+                .category(book.getCategory().getName())
+                .year(book.getYear())
+                .available(book.isAvailable())
+                .build();
     }
 }
 

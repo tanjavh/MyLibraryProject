@@ -1,36 +1,45 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="nav">
-<head></head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <title>Navigation</title>
+</head>
 <body>
 <nav>
   <ul>
+    <!-- Home - svi korisnici -->
     <li><a th:href="@{/}">Home</a></li>
 
-    <li th:if="${#authorization.expression('isAuthenticated()')}">
+    <!-- Knjige - samo ulogovani korisnici -->
+    <li sec:authorize="isAuthenticated()">
       <a th:href="@{/books}">Knjige</a>
     </li>
 
-    <li th:if="${#authorization.expression('isAuthenticated()')}">
-      <a th:href="@{/loans/my}">Moje pozajmice</a>
+    <!-- Moje pozajmice - samo ulogovani korisnici -->
+    <li sec:authorize="isAuthenticated()">
+      <a th:href="@{/loans/active}">Moje pozajmice</a>
     </li>
 
-    <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+    <!-- Korisnici - samo admin -->
+    <li sec:authorize="hasRole('ADMIN')">
       <a th:href="@{/users}">Korisnici</a>
     </li>
 
-    <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+    <!-- Sve pozajmice - samo admin -->
+    <li sec:authorize="hasRole('ADMIN')">
       <a th:href="@{/loans/all}">Sve pozajmice</a>
     </li>
 
-    <li th:if="${#authorization.expression('isAnonymous()')}">
+    <!-- Login i Register - anonimni korisnici -->
+    <li sec:authorize="isAnonymous()">
       <a th:href="@{/users/login}">Login</a>
     </li>
-
-    <li th:if="${#authorization.expression('isAnonymous()')}">
+    <li sec:authorize="isAnonymous()">
       <a th:href="@{/users/register}">Register</a>
     </li>
 
-    <li th:if="${#authorization.expression('isAuthenticated()')}">
+    <!-- Logout - ulogovani korisnici -->
+    <li sec:authorize="isAuthenticated()">
       <form th:action="@{/logout}" method="post" style="display:inline">
         <button type="submit">Logout</button>
       </form>

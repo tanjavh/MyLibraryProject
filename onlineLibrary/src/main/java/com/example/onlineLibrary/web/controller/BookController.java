@@ -3,6 +3,7 @@ package com.example.onlineLibrary.web.controller;
 import com.example.onlineLibrary.model.dto.BookCreateDto;
 import com.example.onlineLibrary.model.dto.BookInfoResponse;
 import com.example.onlineLibrary.model.enums.CategoryName;
+import com.example.onlineLibrary.service.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -19,6 +21,7 @@ public class BookController {
 
     private final RestTemplate restTemplate;
     private final String libraryUrl = "http://localhost:8081/api/books";
+    private final LoanService loanService;
 
     @GetMapping
     public String allBooks(Model model) {
@@ -36,7 +39,7 @@ public class BookController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create") // samo "/create"
+    @PostMapping("/create")
     public String createBook(@ModelAttribute("book") BookCreateDto dto) {
         restTemplate.postForObject(libraryUrl, dto, Void.class);
         return "redirect:/books";
@@ -46,6 +49,12 @@ public class BookController {
     @PostMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id) {
         restTemplate.delete(libraryUrl + "/" + id);
+        return "redirect:/books";
+    }
+    @PostMapping("/borrow/{bookId}")
+    public String borrowBook(@PathVariable Long bookId, Principal principal) {
+        String username = principal.getName();
+        loanService.borrowBook(username, bookId);
         return "redirect:/books";
     }
 }

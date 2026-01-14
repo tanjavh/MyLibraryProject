@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Sve knjige</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Sve knjige</h1>
+
+<!-- Dugme za dodavanje knjige (samo admin) -->
+<div sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{/books/create}">➕ Dodaj knjigu</a>
+</div>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th>Year</th>
+        <th>Available</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.title}">Title</td>
+        <td th:text="${book.authorName}">Author</td>
+        <td th:text="${book.category}">Category</td>
+        <td th:text="${book.year}">Year</td>
+        <td th:text="${book.available} ? 'Yes' : 'No'">Available</td>
+        <td>
+
+            <!-- Admin: Delete knjige -->
+            <form sec:authorize="hasRole('ADMIN')"
+                  th:action="@{'/books/delete/' + ${book.id}}"
+                  method="post" style="display:inline">
+                <button type="submit">Delete</button>
+            </form>
+
+            <!-- Pozajmice (korisnik) -->
+            <form sec:authorize="isAuthenticated()"
+                  th:if="${book.available}"
+                  th:action="@{'/books/borrow/' + ${book.id}}"
+                  method="post" style="display:inline">
+                <button type="submit">Borrow</button>
+            </form>
+
+            <span sec:authorize="isAuthenticated()" th:if="${!book.available}">
+                Pozajmljeno
+            </span>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

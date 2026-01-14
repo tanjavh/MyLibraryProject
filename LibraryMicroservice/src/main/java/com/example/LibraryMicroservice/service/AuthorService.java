@@ -48,5 +48,11 @@ public class AuthorService {
             authorRepository.delete(author);
         }
     }
+
+
+
+    public Optional<Author> findByName(String newAuthorName) {
+        return authorRepository.findByName(newAuthorName);
+    }
 }
 

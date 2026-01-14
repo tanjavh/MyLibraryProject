@@ -1,12 +1,9 @@
 package com.example.LibraryMicroservice.web.rest;
 
-
 import com.example.LibraryMicroservice.model.dto.BookCreateDto;
 import com.example.LibraryMicroservice.model.dto.BookInfoResponse;
-import com.example.LibraryMicroservice.model.entity.Book;
 import com.example.LibraryMicroservice.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -20,41 +17,9 @@ public class BookRestController {
 
     private final BookService bookService;
     private final RestTemplate restTemplate;
-    private final String loanServiceUrl = "http://localhost:8082/api/loans";
+    private final String loanServiceUrl = "http://localhost:8082/api/loans"; // OnlineLibrary
 
-    @GetMapping
-    public List<BookInfoResponse> getAllBooks() {
-        return bookService.findAll().stream()
-                .map(bookService::toBookInfo)
-                .toList();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<BookInfoResponse> getBookById(@PathVariable Long id) {
-        return bookService.findById(id)
-                .map(bookService::toBookInfo)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<BookInfoResponse> createBook(@RequestBody BookCreateDto dto) {
-        Book saved = bookService.createFromDto(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.toBookInfo(saved));
-    }
-
-    @PutMapping("/{id}/availability")
-    public ResponseEntity<Void> updateAvailability(@PathVariable Long id,
-                                                   @RequestParam boolean available) {
-        bookService.updateAvailability(id, available);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-        bookService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+    // Pozajmi knjigu
     @PostMapping("/{bookId}/borrow/{userId}")
     public ResponseEntity<String> borrowBook(@PathVariable Long bookId,
                                              @PathVariable Long userId) {
@@ -68,8 +33,9 @@ public class BookRestController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Greška: " + e.getMessage());
         }
-
     }
+
+    // Vrati knjigu
     @PostMapping("/{bookId}/return/{loanId}")
     public ResponseEntity<String> returnBook(@PathVariable Long bookId,
                                              @PathVariable Long loanId) {
@@ -85,5 +51,33 @@ public class BookRestController {
         }
     }
 
+    @GetMapping
+    public List<BookInfoResponse> getAllBooks() {
+        return bookService.findAll().stream()
+                .map(bookService::toBookInfo)
+                .toList();
+    }
+    @PostMapping
+    public ResponseEntity<Void> createBook(@RequestBody BookCreateDto dto) {
+        bookService.createFromDto(dto);
+        return ResponseEntity.status(201).build();
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        bookService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<BookInfoResponse> getBookById(@PathVariable Long id) {
+        BookInfoResponse book = bookService.getBookById(id);
+        return ResponseEntity.ok(book);
+    }
+    @PutMapping("/{id}/availability")
+    public ResponseEntity<Void> updateAvailability(
+            @PathVariable Long id,
+            @RequestParam boolean available) {
 
+        bookService.updateAvailability(id, available);
+        return ResponseEntity.ok().build();
+    }
 }

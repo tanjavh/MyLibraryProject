@@ -6,13 +6,12 @@ import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class BookCreateDto {
     private String title;
-    private Long authorId;           // ID izabrane opcije iz select
-    private String newAuthorName;    // Ako korisnik želi novog autora
-    private CategoryName category;   // Izbor iz enum
+    private String newAuthorName; // ime autora iz forme
+    private String description;   // opis knjige
+    private CategoryName category;
     private Integer year;
+    private boolean available = true; // default true
+
 }

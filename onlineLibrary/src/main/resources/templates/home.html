@@ -27,7 +27,7 @@
       </li>
 
       <li>
-        <a th:href="@{/loans/my}">Moje pozajmice</a>
+        <a th:href="@{/loans/active}">Moje pozajmice</a>
       </li>
 
       <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
