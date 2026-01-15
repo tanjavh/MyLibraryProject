@@ -124,10 +124,35 @@ public class LoanService {
 
     @Transactional(readOnly = true)
     public List<LoanDto> getAllLoansDto() {
-        return loanRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        return loanRepository.findAll()
+                .stream()
+                .map(loan -> {
+                    LoanDto dto = new LoanDto();
+                    dto.setLoanId(loan.getId());
+                    dto.setBookId(loan.getBookId());
+                    dto.setLoanDate(loan.getLoanDate());
+                    dto.setReturnDate(loan.getReturnDate());
+                    dto.setReturned(loan.isReturned());
+                    dto.setUsername(loan.getUser().getUsername());
+
+                    // knjiga se čita iz LibraryMicroservice
+                    BookInfoResponse book =
+                            restTemplate.getForObject(
+                                    "http://localhost:8081/api/books/" + loan.getBookId(),
+                                    BookInfoResponse.class
+                            );
+
+                    if (book != null) {
+                        dto.setBookTitle(book.getTitle());
+                        dto.setBookAuthor(book.getAuthorName());
+                        dto.setBookCategory(book.getCategory().name());
+                    }
+
+                    return dto;
+                })
+                .toList();
     }
+
 
     @Transactional
     public void borrowBook(String username, Long bookId) {
