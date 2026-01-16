@@ -5,6 +5,7 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <h1>Kreiraj rolu</h1>
 <form th:action="@{/roles/create}" th:object="${role}" method="post">
   <div>

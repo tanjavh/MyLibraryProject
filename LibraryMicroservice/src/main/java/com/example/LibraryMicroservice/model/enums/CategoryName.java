@@ -6,5 +6,6 @@ public enum CategoryName {
     SCIENCE,
     HISTORY,
     FANTASY,
-    CLASSIC
+    CLASSIC,
+    UNKNOWN
 }

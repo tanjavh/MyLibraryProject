@@ -5,6 +5,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <h1>Kreiraj novu kategoriju</h1>
 
 <form th:action="@{/categories/create}" th:object="${category}" method="post">

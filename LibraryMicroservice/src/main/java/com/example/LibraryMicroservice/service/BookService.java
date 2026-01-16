@@ -10,7 +10,9 @@ import com.example.LibraryMicroservice.model.entity.Category;
 import com.example.LibraryMicroservice.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
@@ -53,28 +55,24 @@ public class BookService {
     }
 
     public Book createFromDto(BookCreateDto dto) {
-        Author author = null;
+        Author author;
 
-        // Autor: novi ili izabrani
         if (dto.getNewAuthorName() != null && !dto.getNewAuthorName().isBlank()) {
+            // novi autor
             author = new Author();
             author.setName(dto.getNewAuthorName());
             author = authorService.save(author);
-        } else if (dto.getNewAuthorName() != null) {
-            author = authorService.findByName(dto.getNewAuthorName())
+        } else if (dto.getAuthorId() != null) {
+            // postojeći autor
+            author = authorService.findById(dto.getAuthorId())
                     .orElseThrow(() -> new RuntimeException("Izabrani autor ne postoji!"));
         } else {
             throw new RuntimeException("Morate uneti autora!");
         }
 
-        // Kategorija
-        if (dto.getCategory() == null) {
-            throw new RuntimeException("Morate izabrati kategoriju!");
-        }
         Category category = categoryService.findByName(dto.getCategory())
                 .orElseGet(() -> categoryService.save(new Category(dto.getCategory())));
 
-        // Kreiranje knjige
         Book book = Book.builder()
                 .title(dto.getTitle())
                 .author(author)
@@ -107,7 +105,10 @@ public class BookService {
 
     public BookInfoResponse getBookById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Book not found"
+                ));
 
         return BookInfoResponse.builder()
                 .id(book.getId())

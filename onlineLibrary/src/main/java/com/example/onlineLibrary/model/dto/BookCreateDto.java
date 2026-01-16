@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class BookCreateDto {
     private String title;
+    private Long authorId;
     private String newAuthorName; // ime autora iz forme
     private String description;   // opis knjige
     private CategoryName category;

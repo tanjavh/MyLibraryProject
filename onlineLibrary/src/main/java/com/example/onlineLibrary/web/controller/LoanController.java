@@ -6,6 +6,7 @@ import com.example.onlineLibrary.service.LoanService;
 import com.example.onlineLibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,23 +23,22 @@ public class LoanController {
     private final LoanService loanService;
     private final UserService userService;
     private final RestTemplate restTemplate;
-
     private final String libraryUrl = "http://localhost:8081/api/books";
 
-    // =============================
+    // ==============================
     // Moj pregled pozajmica (korisnik)
-    // =============================
+    // ==============================
     @GetMapping("/active")
     public String getActiveLoans(Model model, Principal principal) {
-        String username = principal.getName(); // trenutno ulogovani korisnik
+        String username = principal.getName();
         List<LoanDto> loans = loanService.getActiveLoansByUser(username);
         model.addAttribute("loans", loans);
-        return "loans-active"; // Thymeleaf view
+        return "loans-active";
     }
 
-    // =============================
+    // ==============================
     // Pregled svih pozajmica (admin)
-    // =============================
+    // ==============================
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public String getAllLoans(Model model) {
@@ -47,25 +47,28 @@ public class LoanController {
         return "loans-all";
     }
 
-    // =============================
+    // ==============================
     // Forma za kreiranje nove pozajmice (admin)
-    // =============================
+    // ==============================
     @GetMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public String createLoanForm(Model model) {
-        // Lista korisnika iz lokalne baze
         model.addAttribute("users", userService.getAllUsers());
 
-        // Lista knjiga iz LibraryMicroservice preko REST
-        BookInfoResponse[] books = restTemplate.getForObject(libraryUrl, BookInfoResponse[].class);
-        model.addAttribute("books", books != null ? List.of(books) : List.of());
+        BookInfoResponse[] books = null;
+        try {
+            books = restTemplate.getForObject(libraryUrl, BookInfoResponse[].class);
+        } catch (Exception e) {
+            System.out.println("Ne mogu da dobijem listu knjiga: " + e.getMessage());
+        }
 
-        return "loans-create"; // Thymeleaf view
+        model.addAttribute("books", books != null ? List.of(books) : List.of());
+        return "loans-create";
     }
 
-    // =============================
+    // ==============================
     // Kreiranje nove pozajmice (admin)
-    // =============================
+    // ==============================
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public String createLoan(@RequestParam Long userId, @RequestParam Long bookId) {
@@ -73,12 +76,19 @@ public class LoanController {
         return "redirect:/loans/all";
     }
 
-    // =============================
-    // Vrati knjigu (korisnik)
-    // =============================
+    // ==============================
+    // Vrati knjigu (korisnik ili admin za svoje pozajmice)
+    // ==============================
     @PostMapping("/return/{loanId}")
-    public String returnLoan(@PathVariable Long loanId) {
-        loanService.returnLoan(loanId);
+    public String returnLoan(@PathVariable Long loanId,
+                             Authentication authentication) {
+        try {
+            loanService.returnLoan(loanId, authentication.getName());
+        } catch (RuntimeException e) {
+            // Opcionalno: možeš proslediti poruku kao flash atribut i prikazati u view
+            System.out.println("Greška: " + e.getMessage());
+        }
+
         return "redirect:/loans/active";
     }
 }

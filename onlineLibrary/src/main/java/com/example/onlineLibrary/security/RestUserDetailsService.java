@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +33,15 @@ public class RestUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found: " + username);
         }
 
-        // Mapiranje roles u GrantedAuthority
-        List<GrantedAuthority> authorities = userDto.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        // Ako roles nisu poslati (npr. null), dodeli default ROLE_USER
+        List<GrantedAuthority> authorities;
+        if (userDto.getRoles() == null || userDto.getRoles().isEmpty()) {
+            authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            authorities = userDto.getRoles().stream()
+                    .map(roleName -> new SimpleGrantedAuthority("ROLE_" + roleName)) // prefix ROLE_ je obavezan
+                    .collect(Collectors.toList());
+        }
 
         // Kreiranje Spring Security User objekta
         return new org.springframework.security.core.userdetails.User(

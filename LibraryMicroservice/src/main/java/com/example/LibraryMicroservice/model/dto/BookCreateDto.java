@@ -1,17 +1,21 @@
 package com.example.LibraryMicroservice.model.dto;
 
-
 import com.example.LibraryMicroservice.model.enums.CategoryName;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 public class BookCreateDto {
     private String title;
-    private String newAuthorName; // ime autora iz forme
-    private String description;   // opis knjige
-    private CategoryName category;
-    private Integer year;
-    private boolean available = true; // default true
 
+    // za postojeće autore iz selecta
+    private Long authorId;
+
+    // za novog autora
+    private String newAuthorName;
+
+    private CategoryName category;
+
+    private Integer year;
 }

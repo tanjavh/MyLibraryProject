@@ -5,8 +5,11 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <h1>Svi korisnici</h1>
-<a th:href="@{/users/create}">Dodaj novog korisnika</a>
+
+<!-- Dugme za dodavanje korisnika uklonjeno -->
+
 <table>
   <thead>
   <tr>
@@ -23,7 +26,13 @@
     <td th:text="${user.id}">ID</td>
     <td th:text="${user.username}">Username</td>
     <td th:text="${user.email}">Email</td>
-    <td th:text="${user.roles.iterator().next().name}">Role</td>
+    <td>
+  <span th:if="${user.roles != null and !user.roles.isEmpty()}"
+        th:text="${#strings.listJoin(user.roles, ', ')}"></span>
+      <span th:if="${user.roles == null or user.roles.isEmpty()}">
+        NEMA ROLE
+  </span>
+    </td>
     <td th:text="${user.active}">Active</td>
     <td>
       <form th:action="@{'/users/delete/' + ${user.id}}" method="post">

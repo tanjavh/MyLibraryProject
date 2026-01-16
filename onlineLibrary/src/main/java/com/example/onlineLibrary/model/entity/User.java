@@ -28,7 +28,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private boolean active;
+    private boolean active = true; // automatski aktivan
+
+    @Column(nullable = false)
+    private boolean blocked = false; // automatski neblokiran
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",

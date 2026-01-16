@@ -1,5 +1,8 @@
 package com.example.onlineLibrary.service;
 
+import com.example.onlineLibrary.model.entity.Role;
+import com.example.onlineLibrary.model.enums.RoleName;
+import com.example.onlineLibrary.repository.RoleRepository;
 import com.example.onlineLibrary.security.UserPrincipal;
 import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.repository.UserRepository;
@@ -12,12 +15,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
 
     // Spring Security login
     @Override
@@ -55,5 +61,16 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User register(User user) {
+        Role userRole = roleRepository.findByName(RoleName.USER)
+                .orElseThrow(() -> new RuntimeException("ROLE USER ne postoji"));
+
+        user.setRoles(Set.of(userRole));
+        user.setActive(true);
+        user.setBlocked(false);
+
+        return userRepository.save(user);
     }
 }

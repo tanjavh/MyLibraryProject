@@ -48,7 +48,6 @@ public class UserController {
     @GetMapping("/create")
     public String createUserForm(Model model) {
         model.addAttribute("userRegisterDto", new UserRegisterDto());
-        model.addAttribute("allRoles", roleService.findAll());
         return "create-user";
     }
 
@@ -59,32 +58,27 @@ public class UserController {
                              Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("allRoles", roleService.findAll());
+            // više nema allRoles jer ne prikazujemo checkboxe
             return "create-user";
         }
 
+        // Pronađi USER rolu
+        Role userRole = roleService.findByName(RoleName.USER)
+                .orElseThrow(() -> new RuntimeException("USER role not found"));
+
+        // Kreiraj korisnika sa default USER rolom
         User user = User.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .active(true)
+                .roles(Collections.singleton(userRole)) // automatski USER
                 .build();
-
-        if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
-            Set<Role> roles = dto.getRoles().stream()
-                    .map(roleName -> roleService.findByName(RoleName.valueOf(roleName))
-                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName)))
-                    .collect(Collectors.toSet());
-            user.setRoles(roles);
-        } else {
-            Role defaultRole = roleService.findByName(RoleName.USER)
-                    .orElseThrow(() -> new RuntimeException("Default role not found"));
-            user.setRoles(Collections.singleton(defaultRole));
-        }
 
         userService.save(user);
         return "redirect:/users";
     }
+
 
     // ==============================
     // BRISANJE KORISNIKA (ADMIN)
@@ -112,7 +106,6 @@ public class UserController {
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("userRegisterDto", new UserRegisterDto());
-        model.addAttribute("allRoles", roleService.findAll());
         return "register";
     }
 
@@ -122,7 +115,6 @@ public class UserController {
                                Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("allRoles", roleService.findAll());
             return "register";
         }
 
@@ -131,21 +123,12 @@ public class UserController {
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .active(true)
+                .blocked(false)
                 .build();
 
-        if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
-            Set<Role> roles = dto.getRoles().stream()
-                    .map(roleName -> roleService.findByName(RoleName.valueOf(roleName))
-                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName)))
-                    .collect(Collectors.toSet());
-            user.setRoles(roles);
-        } else {
-            Role defaultRole = roleService.findByName(RoleName.USER)
-                    .orElseThrow(() -> new RuntimeException("Default role not found"));
-            user.setRoles(Collections.singleton(defaultRole));
-        }
+        // ✅ REGISTRACIJA PREKO SERVISA (dodela ROLE_USER)
+        userService.register(user);
 
-        userService.save(user);
         return "redirect:/login";
     }
 }

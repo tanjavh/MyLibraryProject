@@ -42,17 +42,23 @@ public class BookController {
         model.addAttribute("book", new BookCreateDto());
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("categories", CategoryName.values());
-        return "books-create";
+        return "create-book";
     }
 
-    // =======================
-    // Kreiranje nove knjige - POST
-    // =======================
     @PostMapping("/create")
-    public String createBook(@ModelAttribute("book") BookCreateDto dto) {
-        bookService.createFromDto(dto);
-        return "redirect:/books";
+    public String createBook(@ModelAttribute("book") BookCreateDto dto, Model model) {
+        try {
+            bookService.createFromDto(dto);
+            return "redirect:/books";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("book", dto);
+            model.addAttribute("authors", authorService.findAll());
+            model.addAttribute("categories", CategoryName.values());
+            return "create-book";
+        }
     }
+
 
     // =======================
     // Brisanje knjige

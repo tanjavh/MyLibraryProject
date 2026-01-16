@@ -5,9 +5,10 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <h1>Kreiraj novu knjigu</h1>
 
-<form th:action="@{/books-create}" th:object="${book}" method="post">
+<form th:action="@{/books/create}" th:object="${book}" method="post">
   <div>
     <label>Naslov:</label>
     <input type="text" th:field="*{title}" required/>

@@ -5,6 +5,7 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 <h1>Kreiraj korisnika</h1>
 <form th:action="@{/users/create}" th:object="${user}" method="post">
   <div>

@@ -39,18 +39,21 @@ public class UserPrincipal implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+
 
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !user.isBlocked(); // ako je blocked = true, account je zaključan
+    }
+
     @Override
     public boolean isEnabled() {
-        return user.isActive();
+        return !user.isBlocked(); // takođe blokira login
     }
 }

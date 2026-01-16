@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div th:replace="fragments/nav :: nav"></div>
 
 <h1>Sve pozajmice</h1>
 
@@ -34,18 +35,18 @@
         <td th:text="${loan.returnDate != null ? loan.returnDate : '-'}">Datum vraćanja</td>
 
         <td>
-            <form sec:authorize="hasRole('ADMIN')"
-                  th:if="${!loan.returned}"
-                  th:action="@{'/loans/return/' + ${loan.loanId}}"
-                  method="post">
+            <!-- Dugme se prikazuje samo ako knjiga nije vraćena i ako je vlasnik pozajmice trenutni korisnik -->
+            <form th:if="${!loan.returned} and ${loan.username} == ${#authentication.name}"
+                  th:action="@{'/loans/return/' + ${loan.loanId}}" method="post">
                 <button type="submit">Vrati knjigu</button>
             </form>
 
+            <!-- Ako je vraćena ili nije tvoja pozajmica -->
             <span th:if="${loan.returned}">Vraćeno</span>
+            <span th:if="${!loan.returned} and ${loan.username} != ${#authentication.name}">Nije tvoja pozajmica</span>
         </td>
     </tr>
     </tbody>
 </table>
-
 </body>
 </html>

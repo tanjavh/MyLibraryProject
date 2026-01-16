@@ -16,4 +16,5 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     // Provera da li korisnik trenutno ima aktivnu pozajmicu za određenu knjigu
     Optional<Loan> findByUserAndBookIdAndReturnedFalse(User user, Long bookId);
+    List<Loan> findByUserUsername(String username);
 }

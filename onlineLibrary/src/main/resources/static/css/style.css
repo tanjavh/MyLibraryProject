@@ -140,3 +140,8 @@ input:focus, select:focus {
     max-width: 1000px;
     margin: auto;
 }
+
+.overdue {
+    background-color: #f8d7da;
+    color: #721c24;
+}

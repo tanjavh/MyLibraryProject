@@ -80,4 +80,5 @@ public class BookRestController {
         bookService.updateAvailability(id, available);
         return ResponseEntity.ok().build();
     }
+
 }
