@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/style.css}">
 <head>
     <meta charset="UTF-8">
     <title>Online biblioteka</title>
 </head>
-<body>
+<body class="index-page">
+<div class="index-wrapper">
+<h1>Dobrodošli u online biblioteku!</h1>
+    <p class="index-subtitle">
+        Upravljajte knjigama i pozajmicama jednostavno i brzo
+    </p>
 
-<h1>📚 Dobrodošli u online biblioteku!</h1>
-
-<div>
-    <a th:href="@{/login}">
-        <button>Login</button>
+<div class="index-buttons">
+    <a th:href="@{/users/login}">
+        <button class="primary-btn">Login</button>
     </a>
 
-    <a th:href="@{/register}">
-        <button>Register</button>
+    <a th:href="@{/users/register}">
+        <button class="secondary-btn">Register</button>
     </a>
 </div>
-
+</div>
 </body>
 </html>

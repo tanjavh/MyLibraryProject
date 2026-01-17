@@ -27,6 +27,13 @@ public class HomeController {
     @GetMapping("/home")
     public String home(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
+
+        // da li je admin
+        boolean isAdmin = authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+
         return "home";
     }
 }

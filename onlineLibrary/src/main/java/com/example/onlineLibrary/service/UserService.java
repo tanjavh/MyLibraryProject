@@ -1,7 +1,9 @@
 package com.example.onlineLibrary.service;
 
+import com.example.onlineLibrary.model.dto.UserViewDto;
 import com.example.onlineLibrary.model.entity.Role;
 import com.example.onlineLibrary.model.enums.RoleName;
+import com.example.onlineLibrary.repository.LoanRepository;
 import com.example.onlineLibrary.repository.RoleRepository;
 import com.example.onlineLibrary.security.UserPrincipal;
 import com.example.onlineLibrary.model.entity.User;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final LoanRepository loanRepository;
 
 
     // Spring Security login
@@ -73,21 +77,35 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
-    public void deleteUser(Long userId) {
-        User currentUser = getCurrentUser();
-        User userToDelete = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public void deleteUser(Long id) {
+        User user = getUserById(id)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
 
-        if (currentUser.getId().equals(userToDelete.getId())) {
-            throw new IllegalStateException("Admin ne može obrisati samog sebe");
+        // Provera da li korisnik ima aktivne pozajmice
+        boolean hasActiveLoans = loanRepository.existsByUserAndReturnedFalse(user);
+        if (hasActiveLoans) {
+            throw new IllegalStateException("Korisnik ima aktivne pozajmice i ne može biti obrisan");
         }
 
-        userRepository.delete(userToDelete);
+        userRepository.delete(user);
     }
     public void blockUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Korisnik ne postoji"));
         user.setBlocked(true);
         userRepository.save(user);
+    }
+    public List<UserViewDto> getAllUsersForView() {
+        return userRepository.findAll().stream()
+                .map(user -> UserViewDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .role(user.getRoles().isEmpty() ? "N/A" : user.getRoles().iterator().next().getName().name())
+                        .active(user.isActive())
+                        .blocked(user.isBlocked())
+                        .hasActiveLoans(loanRepository.existsByUserAndReturnedFalse(user))
+                        .build())
+                .collect(Collectors.toList());
     }
 }

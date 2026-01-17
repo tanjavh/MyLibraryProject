@@ -8,7 +8,6 @@ import com.example.LibraryMicroservice.model.entity.Author;
 import com.example.LibraryMicroservice.model.entity.Book;
 import com.example.LibraryMicroservice.model.entity.Category;
 import com.example.LibraryMicroservice.repository.BookRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

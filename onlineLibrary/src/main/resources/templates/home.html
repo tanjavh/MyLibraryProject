@@ -2,20 +2,48 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Home</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
+
+<body class="home-page">
 
 <div th:replace="fragments/nav :: nav"></div>
 
-<h1>Dobrodošli u Online Biblioteku</h1>
+<div class="home-wrapper">
 
-<p th:if="${username != null}"
-   th:text="'Ulogovani ste kao: ' + ${username}">
-</p>
+  <h1>📚 Dobrodošli u online biblioteku!</h1>
 
-<p th:if="${username == null}">
-  Niste ulogovani
-</p>
+  <p class="user-info"
+     th:if="${username != null}"
+     th:text="'Ulogovani ste kao: ' + ${username}">
+  </p>
+
+  <p class="user-info warning"
+     th:if="${username == null}">
+    Niste ulogovani
+  </p>
+
+  <div class="home-actions">
+    <a th:href="@{/books}">
+      <button class="primary-btn">Sve knjige</button>
+    </a>
+
+    <a th:href="@{/loans/active}">
+      <button class="secondary-btn">Moje pozajmice</button>
+    </a>
+  </div>
+
+
+<div class="admin-actions" th:if="${isAdmin}">
+  <a th:href="@{/users}">
+    <button class="secondary-btn">Svi korisnici</button>
+  </a>
+  <a th:href="@{/loans/all}">
+    <button class="primary-btn">Sve pozajmice</button>
+  </a>
+</div>
+</div>
 
 </body>
 </html>
+

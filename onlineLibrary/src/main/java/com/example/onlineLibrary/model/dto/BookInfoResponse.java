@@ -15,5 +15,10 @@ public class BookInfoResponse {
     private CategoryName category;
     private int year;
     private boolean available;
+    private boolean hasActiveLoans; // za kontrolu dugmeta Obriši
+
+
+
+
 }
 

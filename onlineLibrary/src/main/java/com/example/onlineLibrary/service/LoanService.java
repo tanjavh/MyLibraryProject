@@ -178,4 +178,12 @@ public class LoanService {
             System.out.println("Ne mogu da update-ujem dostupnost knjige: " + e.getMessage());
         }
     }
+
+    public void returnBookByBookId(Long bookId, String username) {
+    }
+
+    // Proverava da li neka knjiga ima aktivnu pozajmicu
+    public boolean existsByBookIdAndReturnedFalse(Long bookId) {
+        return loanRepository.existsByBookIdAndReturnedFalse(bookId);
+    }
 }

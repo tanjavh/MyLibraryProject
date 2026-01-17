@@ -4,6 +4,7 @@ import com.example.onlineLibrary.model.dto.BookCreateDto;
 import com.example.onlineLibrary.model.dto.BookInfoResponse;
 import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.model.enums.CategoryName;
+
 import com.example.onlineLibrary.service.LoanService;
 import com.example.onlineLibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,24 +24,35 @@ import java.util.List;
 public class BookController {
 
     private final RestTemplate restTemplate;
-    private final String libraryUrl = "http://localhost:8081/api/books";
     private final LoanService loanService;
     private final UserService userService;
+    private final String libraryUrl = "http://localhost:8081/api/books";
 
+    // ==============================
+    // Prikaz svih knjiga
+    // ==============================
     @GetMapping
     public String allBooks(Model model, Authentication authentication) {
         BookInfoResponse[] books = restTemplate.getForObject(libraryUrl, BookInfoResponse[].class);
-        model.addAttribute("books", List.of(books));
+        List<BookInfoResponse> bookList = books != null ? List.of(books) : new ArrayList<>();
 
-        // 👇 Dodaj username trenutno ulogovanog korisnika
+        // Za svaku knjigu proveri da li ima aktivnu pozajmicu
+        bookList.forEach(book -> {
+            boolean hasActiveLoans = loanService.existsByBookIdAndReturnedFalse(book.getId());
+            book.setHasActiveLoans(hasActiveLoans);
+        });
+
+        model.addAttribute("books", bookList);
+
         if (authentication != null) {
             model.addAttribute("currentUsername", authentication.getName());
         }
 
         return "books";
     }
-
-
+    // ==============================
+    // Kreiranje nove knjige (ADMIN)
+    // ==============================
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/create")
     public String createForm(Model model) {
@@ -56,12 +68,25 @@ public class BookController {
         return "redirect:/books";
     }
 
+    // ==============================
+    // Brisanje knjige (ADMIN) samo ako nije pozajmljena
+    // ==============================
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id) {
+        boolean hasActiveLoans = loanService.existsByBookIdAndReturnedFalse(id);
+        if (hasActiveLoans) {
+            // možeš dodati flash atribut za poruku u view
+            return "redirect:/books?error=activeLoan";
+        }
+
         restTemplate.delete(libraryUrl + "/" + id);
         return "redirect:/books";
     }
+
+    // ==============================
+    // Pozajmi knjigu
+    // ==============================
     @PostMapping("/borrow/{bookId}")
     public String borrowBook(@PathVariable Long bookId, Principal principal) {
         User currentUser = userService.getCurrentUser();
@@ -70,6 +95,20 @@ public class BookController {
         }
 
         loanService.borrowBook(currentUser.getUsername(), bookId);
+        return "redirect:/books";
+    }
+
+    // ==============================
+    // Vrati knjigu
+    // ==============================
+    @PostMapping("/return/{bookId}")
+    public String returnBook(@PathVariable Long bookId, Principal principal) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        loanService.returnBookByBookId(bookId, currentUser.getUsername());
         return "redirect:/books";
     }
 }

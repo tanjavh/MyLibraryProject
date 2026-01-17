@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <title>Sve knjige</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Sve knjige</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 <div th:replace="fragments/nav :: nav"></div>
 
@@ -12,52 +13,78 @@
 
 <!-- Dugme Dodaj knjigu samo za admina -->
 <div sec:authorize="hasRole('ADMIN')">
-  <a th:href="@{/books/create}">➕ Dodaj knjigu</a>
+    <a th:href="@{/books/create}">➕ Dodaj knjigu</a>
 </div>
 
-<table>
-  <thead>
-  <tr>
-    <th>Naslov</th>
-    <th>Autor</th>
-    <th>Kategorija</th>
-    <th>Godina izdavanja</th>
-    <th>Akcije</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="book : ${books}">
-    <td th:text="${book.title}">Naslov</td>
-    <td th:text="${book.authorName}">Autor</td>
-    <td th:text="${book.category}">Kategorija</td>
-    <td th:text="${book.year}">Godina izdavanja</td>
-    <td>
-      <!-- Dugme Obriši samo za admina -->
-      <span sec:authorize="hasRole('ADMIN')">
-                    <form th:action="@{'/books/delete/' + ${book.id}}" method="post" style="display:inline-block;">
+<div class="table-wrapper">
+    <table>
+        <thead>
+        <tr>
+            <th>Naslov</th>
+            <th>Autor</th>
+            <th>Kategorija</th>
+            <th>Godina izdavanja</th>
+            <th>Akcije</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}">Naslov</td>
+            <td th:text="${book.authorName}">Autor</td>
+            <td th:text="${book.category}">Kategorija</td>
+            <td th:text="${book.year}">Godina</td>
+
+            <td>
+
+                <!-- ================= ADMIN AKCIJE ================= -->
+
+                <span sec:authorize="hasRole('ADMIN')">
+
+                    <!-- Dugme Obriši AKO nema aktivne pozajmice -->
+                    <form th:if="${!book.hasActiveLoans}"
+                          th:action="@{'/books/delete/' + ${book.id}}"
+                          method="post"
+                          style="display:inline-block;">
                         <button type="submit">Obriši</button>
                     </form>
+
+                    <!-- Poruka ako knjiga ima aktivne pozajmice -->
+                    <span th:if="${book.hasActiveLoans}"
+                          style="color: gray; font-style: italic; margin-left: 8px;">
+                        Ne može se obrisati – knjiga je pozajmljena
+                    </span>
+
                 </span>
 
-      <!-- Dugme Pozajmi samo za neblokiranog korisnika i ako je dostupna -->
-      <span th:if="${book.available} and !${currentUserBlocked}">
-                    <form th:action="@{'/books/borrow/' + ${book.id}}" method="post" style="display:inline-block;">
+                <!-- ================= USER AKCIJE ================= -->
+
+                <!-- Dugme Pozajmi ako je dostupna i korisnik NIJE blokiran -->
+                <span th:if="${book.available} and !${currentUserBlocked}">
+                    <form th:action="@{'/books/borrow/' + ${book.id}}"
+                          method="post"
+                          style="display:inline-block;">
                         <button type="submit">Pozajmi</button>
                     </form>
                 </span>
 
-      <!-- Tekst Pozajmljeno ako knjiga nije dostupna -->
-      <span th:unless="${book.available}" style="margin-left: 10px; color: gray; font-weight: bold;">
+                <!-- Tekst Pozajmljeno ako nije dostupna -->
+                <span th:unless="${book.available}"
+                      style="margin-left: 10px; color: gray; font-weight: bold;">
                     Pozajmljeno
                 </span>
 
-      <!-- Poruka ako je korisnik blokiran -->
-      <span th:if="${book.available} and ${currentUserBlocked}" style="margin-left: 10px; color: red; font-weight: bold;">
+                <!-- Poruka ako je korisnik blokiran -->
+                <span th:if="${book.available} and ${currentUserBlocked}"
+                      style="margin-left: 10px; color: red; font-weight: bold;">
                     Blokiran: ne možeš pozajmiti
                 </span>
-    </td>
-  </tr>
-  </tbody>
-</table>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>
