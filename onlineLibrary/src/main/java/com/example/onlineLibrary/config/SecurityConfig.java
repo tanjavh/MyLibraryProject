@@ -35,7 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/register", "/users/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/","/users/register", "/users/login", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/users/login")  // POST URL koji Security obrađuje
                         .usernameParameter("username")       // ime input polja za username
                         .passwordParameter("password")       // ime input polja za password
-                        .defaultSuccessUrl("/", true)        // gde ide posle uspešnog login-a
+                        .defaultSuccessUrl("/home", true)        // gde ide posle uspešnog login-a
                         .failureUrl("/users/login?error")    // gde ide posle neuspeha
                         .permitAll()
                 )

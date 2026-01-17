@@ -10,40 +10,51 @@
 
 <h1>Sve knjige</h1>
 
+<!-- Dugme Dodaj knjigu samo za admina -->
 <div sec:authorize="hasRole('ADMIN')">
   <a th:href="@{/books/create}">➕ Dodaj knjigu</a>
 </div>
 
-<table border="1">
+<table>
   <thead>
   <tr>
-    <th>Title</th>
-    <th>Author</th>
-    <th>Category</th>
-    <th>Year</th>
-    <th>Available</th>
-    <th>Actions</th>
+    <th>Naslov</th>
+    <th>Autor</th>
+    <th>Kategorija</th>
+    <th>Godina izdavanja</th>
+    <th>Akcije</th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="book : ${books}">
-    <td th:text="${book.title}"></td>
-    <td th:text="${book.authorName}"></td>
-    <td th:text="${book.category}"></td>
-    <td th:text="${book.year}"></td>
-    <td th:text="${book.available} ? 'Yes' : 'No'"></td>
+    <td th:text="${book.title}">Naslov</td>
+    <td th:text="${book.authorName}">Autor</td>
+    <td th:text="${book.category}">Kategorija</td>
+    <td th:text="${book.year}">Godina izdavanja</td>
     <td>
-      <form sec:authorize="hasRole('ADMIN')"
-            th:action="@{'/books/delete/' + ${book.id}}" method="post" style="display:inline">
-        <button type="submit">Delete</button>
-      </form>
+      <!-- Dugme Obriši samo za admina -->
+      <span sec:authorize="hasRole('ADMIN')">
+                    <form th:action="@{'/books/delete/' + ${book.id}}" method="post" style="display:inline-block;">
+                        <button type="submit">Obriši</button>
+                    </form>
+                </span>
 
-      <form sec:authorize="isAuthenticated()" th:if="${book.available}"
-            th:action="@{'/books/borrow/' + ${book.id}}" method="post" style="display:inline">
-        <button type="submit">Borrow</button>
-      </form>
+      <!-- Dugme Pozajmi samo za neblokiranog korisnika i ako je dostupna -->
+      <span th:if="${book.available} and !${currentUserBlocked}">
+                    <form th:action="@{'/books/borrow/' + ${book.id}}" method="post" style="display:inline-block;">
+                        <button type="submit">Pozajmi</button>
+                    </form>
+                </span>
 
-      <span sec:authorize="isAuthenticated()" th:if="${!book.available}">Pozajmljeno</span>
+      <!-- Tekst Pozajmljeno ako knjiga nije dostupna -->
+      <span th:unless="${book.available}" style="margin-left: 10px; color: gray; font-weight: bold;">
+                    Pozajmljeno
+                </span>
+
+      <!-- Poruka ako je korisnik blokiran -->
+      <span th:if="${book.available} and ${currentUserBlocked}" style="margin-left: 10px; color: red; font-weight: bold;">
+                    Blokiran: ne možeš pozajmiti
+                </span>
     </td>
   </tr>
   </tbody>

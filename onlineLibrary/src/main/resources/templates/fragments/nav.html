@@ -4,8 +4,12 @@
 <body>
 <nav>
   <ul>
-    <!-- Home - svi korisnici -->
-    <li><a th:href="@{/}">Home</a></li>
+    <!-- Index - svi korisnici-->
+    <li sec:authorize="isAnonymous()">
+      <a th:href="@{/}">Index</a>
+    </li>
+    <!-- Home - samo ulogovani korisnici -->
+    <li><a th:href="@{/home}">Home</a></li>
 
     <!-- Knjige - samo ulogovani korisnici -->
     <li sec:authorize="isAuthenticated()">

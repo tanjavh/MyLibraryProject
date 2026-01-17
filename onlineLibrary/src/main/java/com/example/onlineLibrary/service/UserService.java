@@ -73,4 +73,21 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
+    public void deleteUser(Long userId) {
+        User currentUser = getCurrentUser();
+        User userToDelete = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (currentUser.getId().equals(userToDelete.getId())) {
+            throw new IllegalStateException("Admin ne može obrisati samog sebe");
+        }
+
+        userRepository.delete(userToDelete);
+    }
+    public void blockUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("Korisnik ne postoji"));
+        user.setBlocked(true);
+        userRepository.save(user);
+    }
 }

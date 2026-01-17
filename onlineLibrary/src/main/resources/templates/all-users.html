@@ -11,36 +11,34 @@
 <!-- Dugme za dodavanje korisnika uklonjeno -->
 
 <table>
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Username</th>
-    <th>Email</th>
-    <th>Role</th>
-    <th>Active</th>
-    <th>Akcije</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="user : ${users}">
-    <td th:text="${user.id}">ID</td>
-    <td th:text="${user.username}">Username</td>
-    <td th:text="${user.email}">Email</td>
-    <td>
-  <span th:if="${user.roles != null and !user.roles.isEmpty()}"
-        th:text="${#strings.listJoin(user.roles, ', ')}"></span>
-      <span th:if="${user.roles == null or user.roles.isEmpty()}">
-        NEMA ROLE
-  </span>
-    </td>
-    <td th:text="${user.active}">Active</td>
-    <td>
-      <form th:action="@{'/users/delete/' + ${user.id}}" method="post">
-        <button type="submit">Obriši</button>
-      </form>
-    </td>
-  </tr>
-  </tbody>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Username</th>
+  <th>Email</th>
+  <th>Običan korisnik / Admin</th>
+  <th>Aktivan</th>
+  <th>Akcije</th>
+  <th>Blokiran</th>
+</tr>
+</thead>
+<tbody>
+<tr th:each="user : ${users}">
+  <td th:text="${user.id}">ID</td>
+  <td th:text="${user.username}">Username</td>
+  <td th:text="${user.email}">Email</td>
+  <td th:text="${user.roles.iterator().next().name}">Običan korisnik / Admin</td>
+  <td th:text="${user.active}">Aktivan</td>
+  <td th:text="${user.blocked} ? 'Da' : 'Ne'">Blocked</td>
+  <td>
+    <!-- Dugme Obriši samo ako je prijavljeni korisnik ADMIN i nije samog sebe -->
+    <form th:if="${#authorization.expression('hasRole(''ADMIN'')') and user.username != #authentication.name}"
+          th:action="@{'/users/delete/' + ${user.id}}" method="post" style="display:inline-block;">
+      <button type="submit">Obriši</button>
+    </form>
+  </td>
+</tr>
+</tbody>
 </table>
 </body>
 </html>

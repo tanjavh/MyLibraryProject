@@ -117,25 +117,35 @@ public class LoanService {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Pozajmica nije pronađena."));
 
+        // Provera vlasništva
         if (!loan.getUser().getUsername().equals(username)) {
             throw new RuntimeException("Ne možeš da vratiš tuđu knjigu!");
         }
 
+        // Obeležavanje pozajmice kao vraćene
         loan.setReturned(true);
         loan.setReturnDate(LocalDate.now());
         loanRepository.save(loan);
 
+        // Update dostupnosti knjige u LibraryMicroservice
         try {
-            restTemplate.put(libraryBaseUrl + "/" + loan.getBookId() + "/availability?available=true", null);
+            restTemplate.put(
+                    libraryBaseUrl + "/" + loan.getBookId() + "/availability?available=true",
+                    null
+            );
         } catch (Exception e) {
             System.out.println("Ne mogu da update-ujem dostupnost knjige: " + e.getMessage());
         }
     }
+
     @Transactional
     public void borrowBook(String username, Long bookId) {
         // 1️⃣ Nađi korisnika
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
+        if (user.isBlocked()) {
+            throw new RuntimeException("Blokirani korisnici ne mogu pozajmiti nove knjige!");
+        }
 
         // 2️⃣ Proveri da li je knjiga dostupna (pozovi LibraryMicroservice)
         BookInfoResponse book;

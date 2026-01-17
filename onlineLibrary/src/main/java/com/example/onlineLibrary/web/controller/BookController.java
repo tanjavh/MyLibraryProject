@@ -2,10 +2,13 @@ package com.example.onlineLibrary.web.controller;
 
 import com.example.onlineLibrary.model.dto.BookCreateDto;
 import com.example.onlineLibrary.model.dto.BookInfoResponse;
+import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.model.enums.CategoryName;
 import com.example.onlineLibrary.service.LoanService;
+import com.example.onlineLibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +25,21 @@ public class BookController {
     private final RestTemplate restTemplate;
     private final String libraryUrl = "http://localhost:8081/api/books";
     private final LoanService loanService;
+    private final UserService userService;
 
     @GetMapping
-    public String allBooks(Model model) {
+    public String allBooks(Model model, Authentication authentication) {
         BookInfoResponse[] books = restTemplate.getForObject(libraryUrl, BookInfoResponse[].class);
         model.addAttribute("books", List.of(books));
+
+        // 👇 Dodaj username trenutno ulogovanog korisnika
+        if (authentication != null) {
+            model.addAttribute("currentUsername", authentication.getName());
+        }
+
         return "books";
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/create")
@@ -53,8 +64,12 @@ public class BookController {
     }
     @PostMapping("/borrow/{bookId}")
     public String borrowBook(@PathVariable Long bookId, Principal principal) {
-        String username = principal.getName();
-        loanService.borrowBook(username, bookId);
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null || currentUser.isBlocked()) {
+            return "redirect:/books?error=blocked";
+        }
+
+        loanService.borrowBook(currentUser.getUsername(), bookId);
         return "redirect:/books";
     }
 }

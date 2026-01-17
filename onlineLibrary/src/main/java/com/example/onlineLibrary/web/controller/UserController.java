@@ -16,11 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -32,7 +31,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     // ==============================
-    // PRIKAZ SVIH KORISNIKA (ADMIN CRUD)
+    // SVI KORISNICI (ADMIN)
     // ==============================
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
@@ -42,7 +41,7 @@ public class UserController {
     }
 
     // ==============================
-    // FORMA ZA KREIRANJE NOVOG KORISNIKA (ADMIN)
+    // KREIRANJE KORISNIKA (ADMIN)
     // ==============================
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/create")
@@ -58,50 +57,60 @@ public class UserController {
                              Model model) {
 
         if (bindingResult.hasErrors()) {
-            // više nema allRoles jer ne prikazujemo checkboxe
             return "create-user";
         }
 
-        // Pronađi USER rolu
         Role userRole = roleService.findByName(RoleName.USER)
                 .orElseThrow(() -> new RuntimeException("USER role not found"));
 
-        // Kreiraj korisnika sa default USER rolom
         User user = User.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .active(true)
-                .roles(Collections.singleton(userRole)) // automatski USER
+                .roles(Collections.singleton(userRole))
                 .build();
 
         userService.save(user);
         return "redirect:/users";
     }
 
-
     // ==============================
     // BRISANJE KORISNIKA (ADMIN)
     // ==============================
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Long id) {
+    public String deleteUser(@PathVariable Long id,
+                             RedirectAttributes redirectAttributes,
+                             Authentication authentication) {
+
+        // Ne dozvoli adminu da obriše samog sebe
+        User currentUser = userService.findByUsername(authentication.getName())
+                .orElseThrow(() -> new IllegalStateException("Trenutni korisnik nije pronađen"));
+
+        if (currentUser.getId().equals(id)) {
+            redirectAttributes.addFlashAttribute("error", "Ne možete da obrišete samog sebe!");
+            return "redirect:/users";
+        }
+
         userService.getUserById(id).ifPresent(userService::delete);
         return "redirect:/users";
     }
 
+    // ==============================
+    // LOGIN
+    // ==============================
     @GetMapping("/login")
     public String loginPage() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-            // Već ulogovan korisnik, preusmeri na home
             return "redirect:/";
         }
-        return "login"; // prikazuje login formu
+        return "login";
     }
 
     // ==============================
-    // REGISTRACIJA (PUBLIC)
+    // REGISTRACIJA
     // ==============================
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -126,8 +135,7 @@ public class UserController {
                 .blocked(false)
                 .build();
 
-        // ✅ REGISTRACIJA PREKO SERVISA (dodela ROLE_USER)
-        userService.register(user);
+        userService.register(user); // registracija sa default USER rolom
 
         return "redirect:/login";
     }

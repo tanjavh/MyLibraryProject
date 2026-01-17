@@ -2,6 +2,7 @@ package com.example.onlineLibrary.web.controller;
 
 import com.example.onlineLibrary.model.dto.BookInfoResponse;
 import com.example.onlineLibrary.model.dto.LoanDto;
+import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.service.LoanService;
 import com.example.onlineLibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +30,27 @@ public class LoanController {
     // Moj pregled pozajmica (korisnik)
     // ==============================
     @GetMapping("/active")
-    public String getActiveLoans(Model model, Principal principal) {
+    public String myLoans(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
         String username = principal.getName();
+        User currentUser = userService.findByUsername(username).orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        // Uzmi samo aktivne pozajmice korisnika
         List<LoanDto> loans = loanService.getActiveLoansByUser(username);
         model.addAttribute("loans", loans);
+
+        // Flag da li je korisnik blokiran
+        model.addAttribute("currentUserBlocked", currentUser.isBlocked());
+
         return "loans-active";
     }
+
 
     // ==============================
     // Pregled svih pozajmica (admin)
