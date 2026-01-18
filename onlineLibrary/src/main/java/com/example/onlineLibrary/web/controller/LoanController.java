@@ -31,26 +31,18 @@ public class LoanController {
     // ==============================
     @GetMapping("/active")
     public String myLoans(Model model, Principal principal) {
-        if (principal == null) {
-            return "redirect:/login";
-        }
+        if (principal == null) return "redirect:/login";
 
         String username = principal.getName();
         User currentUser = userService.findByUsername(username).orElse(null);
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
+        if (currentUser == null) return "redirect:/login";
 
-        // Uzmi samo aktivne pozajmice korisnika
         List<LoanDto> loans = loanService.getActiveLoansByUser(username);
         model.addAttribute("loans", loans);
-
-        // Flag da li je korisnik blokiran
         model.addAttribute("currentUserBlocked", currentUser.isBlocked());
 
         return "loans-active";
     }
-
 
     // ==============================
     // Pregled svih pozajmica (admin)

@@ -57,7 +57,7 @@ class LoanServiceTest {
 
     @Test
     void testGetActiveLoansByUser_dueDateOverdue() {
-        when(loanRepository.findByUserUsername("user1"))
+        when(loanRepository.findActiveLoansByUsername("user1"))
                 .thenReturn(List.of(testLoan));
 
         // mock REST poziva

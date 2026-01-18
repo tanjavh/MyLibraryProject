@@ -17,6 +17,6 @@ public class UserViewDto {
     private String role;
     private boolean active;
     private boolean blocked;
-    private Set<String> roles; // ["USER"], ["ADMIN"]
+//    private Set<String> roles; // ["USER"], ["ADMIN"]
     private boolean hasActiveLoans; // true ako korisnik ima aktivne pozajmice
 }

@@ -97,15 +97,37 @@ public class UserService implements UserDetailsService {
     }
     public List<UserViewDto> getAllUsersForView() {
         return userRepository.findAll().stream()
-                .map(user -> UserViewDto.builder()
-                        .id(user.getId())
-                        .username(user.getUsername())
-                        .email(user.getEmail())
-                        .role(user.getRoles().isEmpty() ? "N/A" : user.getRoles().iterator().next().getName().name())
-                        .active(user.isActive())
-                        .blocked(user.isBlocked())
-                        .hasActiveLoans(loanRepository.existsByUserAndReturnedFalse(user))
-                        .build())
-                .collect(Collectors.toList());
+                .map(user -> {
+                    // mapiranje u lepa imena
+                    String roleLabel = user.getRoles().stream()
+                            .anyMatch(r -> r.getName() == RoleName.ADMIN)
+                            ? "administrator"
+                            : "korisnik";
+
+                    return UserViewDto.builder()
+                            .id(user.getId())
+                            .username(user.getUsername())
+                            .email(user.getEmail())
+                            .role(roleLabel)  // ovo ide u tabelu
+                            .active(user.isActive())
+                            .blocked(user.isBlocked())
+                            .hasActiveLoans(loanRepository.existsByUserAndReturnedFalse(user))
+                            .build();
+                })
+                .toList();
+    }
+
+
+    private String mapRoleToSerbian(User user) {
+        if (user.getRoles().isEmpty()) {
+            return "N/A";
+        }
+
+        RoleName roleName = user.getRoles().iterator().next().getName();
+
+        return switch (roleName) {
+            case ADMIN -> "Admin";
+            case USER -> "Korisnik";
+        };
     }
 }

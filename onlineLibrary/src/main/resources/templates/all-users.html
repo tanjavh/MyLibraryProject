@@ -14,20 +14,20 @@
     <thead>
     <tr>
       <th>ID</th>
-      <th>Username</th>
+      <th>Korisničko ime</th>
       <th>Email</th>
-      <th>Role</th>
-      <th>Active</th>
+      <th>Uloga</th>
+      <th>Da li je aktivan korisnik</th>
       <th>Akcije</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="user : ${users}">
       <td th:text="${user.id}">ID</td>
-      <td th:text="${user.username}">Username</td>
+      <td th:text="${user.username}">Korisničko ime</td>
       <td th:text="${user.email}">Email</td>
-      <td th:text="${#lists.isEmpty(user.roles) ? 'N/A' : user.roles.iterator().next().name}">Role</td>
-      <td th:text="${user.active}">Active</td>
+      <td th:text="${user.role}">Uloga</td>
+      <td th:text="${user.active}">Da li je aktivan korisnik</td>
       <td>
         <!-- Dugme Obriši samo ako korisnik nema aktivne pozajmice i nije admin samog sebe -->
         <form th:if="${!user.hasActiveLoans and user.username != #authentication.name}"
