@@ -41,7 +41,7 @@ class RegisterControllerIntegrationTest {
                         .param("confirmPassword", "password123")
                 )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
+                .andExpect(redirectedUrl("/users/login"));
 
         User user = userRepository.findByUsername("testuser")
                 .orElseThrow(() -> new AssertionError("User not saved"));
@@ -60,7 +60,10 @@ class RegisterControllerIntegrationTest {
                         .param("confirmPassword", "differentPassword")
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("register"));
+                .andExpect(view().name("register"))
+                .andExpect(model().attributeHasFieldErrors(
+                        "userRegisterDto", "confirmPassword"
+                ));
 
         assertThat(userRepository.findByUsername("testuser")).isEmpty();
     }

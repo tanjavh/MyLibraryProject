@@ -119,27 +119,33 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("userRegisterDto") UserRegisterDto dto,
-                               BindingResult bindingResult,
-                               Model model) {
+    public String register(
+            @Valid @ModelAttribute("userRegisterDto") UserRegisterDto dto,
+            BindingResult bindingResult
+    ) {
+
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            bindingResult.rejectValue(
+                    "confirmPassword",
+                    "password.mismatch",
+                    "Lozinke se ne poklapaju"
+            );
+        }
 
         if (bindingResult.hasErrors()) {
             return "register";
         }
-        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
-            bindingResult.rejectValue("confirmPassword", "passwords.mismatch");
-            return "register";
-        }
+
         User user = User.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .active(true)
-                .blocked(false)
+                .password(passwordEncoder.encode(dto.getPassword())) // ENKODUJ ako već ne radiš ranije
                 .build();
 
-        userService.register(user); // registracija sa default USER rolom
+        userService.register(user);
 
-        return "redirect:/login";
+        return "redirect:/users/login";
     }
+
+
 }
