@@ -1,4 +1,4 @@
-package com.example.onlineLibrary.service.unit;
+package com.example.onlineLibrary.service.unit.loanService;
 
 import com.example.onlineLibrary.model.entity.Loan;
 import com.example.onlineLibrary.model.entity.User;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -74,7 +73,7 @@ class LoanServiceUnitTest {
     }
 
     @Test
-    void testNotOverdueIfMoreThan30Days() {
+    void testOverdueIfMoreThan30Days() {
         Loan loan = Loan.builder()
                 .loanDate(LocalDate.now().minusDays(31))
                 .returned(false)
@@ -88,6 +87,7 @@ class LoanServiceUnitTest {
 
         List<LoanDto> loans = loanService.getActiveLoansByUser("testuser");
 
-        assertThat(loans.get(0).isOverdue()).isFalse();
+        assertThat(loans.get(0).isOverdue()).isTrue();
     }
+
 }

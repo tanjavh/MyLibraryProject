@@ -126,7 +126,10 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "register";
         }
-
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "passwords.mismatch");
+            return "register";
+        }
         User user = User.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())

@@ -31,51 +31,43 @@ public class LoanService {
     // ==============================
     public LoanDto convertToDto(Loan loan) {
         LoanDto dto = new LoanDto();
-
-        // Osnovna polja iz Loan
         dto.setLoanId(loan.getId());
         dto.setBookId(loan.getBookId());
         dto.setBookTitle(loan.getBookTitle());
+        dto.setUsername(loan.getUser().getUsername());
         dto.setLoanDate(loan.getLoanDate());
         dto.setReturnDate(loan.getReturnDate());
-        dto.setReturned(loan.isReturned());
-        dto.setUsername(loan.getUser().getUsername());
 
-        // Overdue warning (>15 dana od loanDate i knjiga nije vraćena)
-
+        // Overdue > 15 dana
         if (!loan.isReturned()) {
-            long days = ChronoUnit.DAYS.between(loan.getLoanDate(), LocalDate.now());
-            dto.setOverdue(days > 15 && days <= 30); // warning za 15-30 dana
+            dto.setOverdue(loan.getLoanDate().plusDays(15).isBefore(LocalDate.now()));
         }
 
-        // Popuni bookAuthor i bookCategory preko LibraryMicroservice
+        // Dohvati dodatne informacije o knjizi iz LibraryMicroservice
         try {
             BookInfoResponse book = restTemplate.getForObject(
                     libraryBaseUrl + "/" + loan.getBookId(),
                     BookInfoResponse.class
             );
+
             if (book != null) {
-                dto.setBookTitle(book.getTitle());
                 dto.setBookAuthor(book.getAuthorName());
                 dto.setBookCategory(book.getCategory());
             } else {
-                // Knjiga obrisana
-                dto.setBookTitle(loan.getBookTitle() + " (obrisana)");
+                dto.setBookTitle(dto.getBookTitle() + " (obrisana)");
                 dto.setBookAuthor("N/A");
                 dto.setBookCategory(null);
             }
         } catch (Exception e) {
-            // Ako REST ne radi ili knjiga obrisana
-            dto.setBookTitle(loan.getBookTitle() + " (obrisana)");
+            // REST nije dostupan, označavamo kao obrisano
+            dto.setBookTitle(dto.getBookTitle() + " (obrisana)");
             dto.setBookAuthor("N/A");
             dto.setBookCategory(null);
         }
 
-        // Opcionalno: postavi dueDate na 15 dana od loanDate
-        dto.setDueDate(loan.getLoanDate().plusDays(15));
-
         return dto;
     }
+
 
     @Transactional(readOnly = true)
     public List<LoanDto> getActiveLoansByUser(String username) {

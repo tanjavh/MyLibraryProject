@@ -35,15 +35,19 @@
         <td th:text="${loan.returnDate != null ? loan.returnDate : '-'}">Datum vraćanja</td>
 
         <td>
-            <!-- Dugme se prikazuje samo ako knjiga nije vraćena i ako je vlasnik pozajmice trenutni korisnik -->
-            <form th:if="${!loan.returned} and ${loan.username} == ${#authentication.name}"
+            <!-- Dugme se prikazuje samo ako knjiga NIJE vraćena i ako je vlasnik pozajmice -->
+            <form th:if="${loan.returnDate == null} and ${loan.username} == ${#authentication.name}"
                   th:action="@{'/loans/return/' + ${loan.loanId}}" method="post">
                 <button type="submit">Vrati knjigu</button>
             </form>
 
-            <!-- Ako je vraćena ili nije tvoja pozajmica -->
-            <span th:if="${loan.returned}">Vraćeno</span>
-            <span th:if="${!loan.returned} and ${loan.username} != ${#authentication.name}">Nije tvoja pozajmica</span>
+            <!-- Ako je vraćena -->
+            <span th:if="${loan.returnDate != null}">Vraćeno</span>
+
+            <!-- Ako nije tvoja pozajmica -->
+            <span th:if="${loan.returnDate == null} and ${loan.username} != ${#authentication.name}">
+        Nije tvoja pozajmica
+    </span>
         </td>
     </tr>
     </tbody>

@@ -1,8 +1,9 @@
 package com.example.onlineLibrary.service.integration;
 
+import com.example.onlineLibrary.model.dto.BookInfoResponse;
+import com.example.onlineLibrary.model.dto.LoanDto;
 import com.example.onlineLibrary.model.entity.Loan;
 import com.example.onlineLibrary.model.entity.User;
-import com.example.onlineLibrary.model.dto.LoanDto;
 import com.example.onlineLibrary.repository.LoanRepository;
 import com.example.onlineLibrary.repository.UserRepository;
 import com.example.onlineLibrary.service.LoanService;
@@ -11,12 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -30,6 +32,9 @@ class LoanServiceIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @MockitoBean
+    private org.springframework.web.client.RestTemplate restTemplate;
 
     private User testUser;
 
@@ -46,25 +51,58 @@ class LoanServiceIntegrationTest {
                 .blocked(false)
                 .build();
         userRepository.save(testUser);
+    }
 
-        // Pozajmica između 15 i 30 dana
+    @Test
+    void testLoanWithExistingBook() {
         Loan loan = Loan.builder()
                 .user(testUser)
                 .bookId(1L)
-                .bookTitle("Integration Book")
+                .bookTitle("Existing Book")
                 .loanDate(LocalDate.now().minusDays(20))
                 .returned(false)
                 .build();
         loanRepository.save(loan);
-    }
 
-    @Test
-    @Transactional
-    void testOverdueFlagIntegration() {
+        BookInfoResponse bookResponse = BookInfoResponse.builder()
+                .id(1L)
+                .title("Existing Book")
+                .authorName("Autor Test")
+                .category(null)
+                .year(2020)
+                .available(false)
+                .build();
+
+        when(restTemplate.getForObject("http://localhost:8081/api/books/1", BookInfoResponse.class))
+                .thenReturn(bookResponse);
+
         List<LoanDto> loans = loanService.getActiveLoansByUser(testUser.getUsername());
 
         assertThat(loans).hasSize(1);
+        assertThat(loans.get(0).getBookTitle()).isEqualTo("Existing Book");
+        assertThat(loans.get(0).getBookAuthor()).isEqualTo("Autor Test");
         assertThat(loans.get(0).isOverdue()).isTrue();
-        assertThat(loans.get(0).getBookTitle()).isEqualTo("Integration Book");
+    }
+
+    @Test
+    void testLoanWithDeletedBook() {
+        Loan loan = Loan.builder()
+                .user(testUser)
+                .bookId(2L)
+                .bookTitle("Deleted Book")
+                .loanDate(LocalDate.now().minusDays(20))
+                .returned(false)
+                .build();
+        loanRepository.save(loan);
+
+        when(restTemplate.getForObject("http://localhost:8081/api/books/2", BookInfoResponse.class))
+                .thenReturn(null);
+
+        List<LoanDto> loans = loanService.getActiveLoansByUser(testUser.getUsername());
+
+        assertThat(loans).hasSize(1);
+        assertThat(loans.get(0).getBookTitle()).isEqualTo("Deleted Book (obrisana)");
+        assertThat(loans.get(0).getBookAuthor()).isEqualTo("N/A");
+        assertThat(loans.get(0).isOverdue()).isTrue();
     }
 }

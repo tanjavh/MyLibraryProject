@@ -19,6 +19,9 @@
   </div> <!-- PASSWORD --> <div> <label for="password">Lozinka:</label>
     <input type="password" id="password" th:field="*{password}" placeholder="Unesite lozinku">
     <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Greška</p>
+  </div> <!-- PASSWORD --> <div> <label for="password">Potvrdite lozinku:</label>
+    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Potvrdite lozinku">
+    <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Greška</p>
   </div> <!-- ROLE -->
     <button type="submit">Registruj se</button>
   </form>

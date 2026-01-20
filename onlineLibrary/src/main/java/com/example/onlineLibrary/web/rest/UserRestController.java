@@ -1,11 +1,13 @@
-package com.example.onlineLibrary.web.controller;
+package com.example.onlineLibrary.web.rest;
 
 
 import com.example.onlineLibrary.model.dto.UserRegisterDto;
 import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
@@ -20,7 +22,8 @@ public class UserRestController {
     @GetMapping("/by-username/{username}")
     public UserRegisterDto getByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found: " + username));
 
         return UserRegisterDto.builder()
                 .id(user.getId())
