@@ -4,6 +4,7 @@ import com.example.onlineLibrary.model.dto.UserRegisterDto;
 import com.example.onlineLibrary.model.entity.Role;
 import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.model.enums.RoleName;
+import com.example.onlineLibrary.repository.UserRepository;
 import com.example.onlineLibrary.service.RoleService;
 import com.example.onlineLibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class UserController {
     private final UserService userService;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     // ==============================
     // SVI KORISNICI (ADMIN)
@@ -124,6 +126,14 @@ public class UserController {
             BindingResult bindingResult
     ) {
 
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            bindingResult.rejectValue(
+                    "email",
+                    "email.exists",
+                    "Email je već u upotrebi"
+            );
+        }
+
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             bindingResult.rejectValue(
                     "confirmPassword",
@@ -139,13 +149,17 @@ public class UserController {
         User user = User.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
-                .password(passwordEncoder.encode(dto.getPassword())) // ENKODUJ ako već ne radiš ranije
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .active(true)
+                .blocked(false)
                 .build();
 
         userService.register(user);
 
         return "redirect:/users/login";
     }
+
+
 
 
 }

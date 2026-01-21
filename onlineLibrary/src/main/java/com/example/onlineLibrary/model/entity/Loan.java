@@ -34,6 +34,7 @@ public class Loan {
     @Column(name = "return_date")
     private LocalDate returnDate;
 
+    @Builder.Default
     @Column(name = "returned", nullable = false)
-    private boolean returned;
+    private boolean returned = false;
 }

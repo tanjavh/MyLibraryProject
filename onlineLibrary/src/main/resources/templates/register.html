@@ -8,20 +8,59 @@
 <div th:replace="fragments/nav :: nav"></div>
 <h1>Registracija</h1>
 <div class="auth-container">
-  <form th:action="@{/users/register}" th:object="${userRegisterDto}" method="post">
+  <form th:action="@{/users/register}" th:object="${userRegisterDto}" th:method="post">
     <!-- KORISNIČKO IME -->
-    <div> <label for="username">Korisničko ime:</label>
-      <input type="text" id="username" th:field="*{username}" placeholder="Unesite username">
-      <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Greška</p>
-    </div> <!-- EMAIL --> <div> <label for="email">Email:</label>
-    <input type="email" id="email" th:field="*{email}" placeholder="Unesite email">
-    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Greška</p>
-  </div> <!-- PASSWORD --> <div> <label for="password">Lozinka:</label>
-    <input type="password" id="password" th:field="*{password}" placeholder="Unesite lozinku">
-    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Greška</p>
-  </div> <!-- PASSWORD --> <div> <label for="password">Potvrdite lozinku:</label>
-    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Potvrdite lozinku">
-    <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Greška</p>
+    <div>
+      <label for="username">Korisničko ime:</label>
+      <input type="text"
+             id="username"
+             th:field="*{username}"
+             placeholder="Unesite korisničko ime"
+             th:class="form-control"
+             th:errorclass="'is-invalid'">
+      <div class="invalid-feedback"
+           th:if="${#fields.hasErrors('username')}"
+           th:errors="*{email}">Greška
+      </div>
+    </div> <!-- EMAIL -->
+    <div>
+      <label for="email">Email:</label>
+    <input type="email"
+           id="email"
+           th:field="*{email}"
+           placeholder="Unesite email"
+           th:class="form-control"
+           th:errorclass="is-invalid">
+    <div class="invalid-feedback"
+         th:if="${#fields.hasErrors('email')}"
+         th:errors="*{email}">Greška
+    </div>
+  </div> <!-- PASSWORD -->
+    <div>
+      <label for="password">Lozinka:</label>
+    <input type="password"
+           id="password"
+           th:field="*{password}"
+           placeholder="Unesite lozinku"
+           th:class="form-control"
+           th:errorclass="'is-invalid'">
+      <div class="invalid-feedback"
+           th:if="${#fields.hasErrors('password')}"
+           th:errors="*{email}">Greška
+      </div>
+  </div> <!-- PASSWORD -->
+    <div>
+      <label for="password">Potvrdite lozinku:</label>
+    <input type="password"
+           id="confirmPassword"
+           th:field="*{confirmPassword}"
+           placeholder="Potvrdite lozinku"
+           th:class="form-control"
+           th:errorclass="'is-invalid'">
+      <div class="invalid-feedback"
+           th:if="${#fields.hasErrors('confirmPassword')}"
+           th:errors="*{email}">Greška
+      </div>
   </div> <!-- ROLE -->
     <button type="submit">Registruj se</button>
   </form>

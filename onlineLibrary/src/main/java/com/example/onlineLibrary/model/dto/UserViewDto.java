@@ -1,5 +1,6 @@
 package com.example.onlineLibrary.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Set;
@@ -12,9 +13,13 @@ import java.util.Set;
 public class UserViewDto {
 
     private Long id;
+    @NotBlank
     private String username;
+    @NotBlank
     private String email;
+    @NotBlank
     private String role;
+    @NotBlank
     private boolean active;
     private boolean blocked;
 //    private Set<String> roles; // ["USER"], ["ADMIN"]

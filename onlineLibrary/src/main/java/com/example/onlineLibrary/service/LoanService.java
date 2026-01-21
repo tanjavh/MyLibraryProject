@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +77,7 @@ public class LoanService {
     }
 
     @Transactional
-    public void returnLoan(Long loanId, String username) {
+    public Loan returnLoan(Long loanId, String username) {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Pozajmica nije pronađena."));
 
@@ -98,6 +97,7 @@ public class LoanService {
         } catch (Exception e) {
             System.out.println("Ne mogu da update-ujem dostupnost knjige: " + e.getMessage());
         }
+        return loan;
     }
 
     @Transactional
@@ -232,4 +232,9 @@ public class LoanService {
         }
     }
 
+
 }
+
+
+
+

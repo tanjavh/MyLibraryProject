@@ -132,5 +132,14 @@ class UserServiceTest {
         assertThat(saved).isEqualTo(user);
         verify(userRepository, times(1)).save(user);
     }
+    @Test
+    void whenDuplicateEmail_thenServiceThrows() {
+        User existing = User.builder().username("u1").email("dup@example.com").password("pass").build();
+        userRepository.save(existing);
+
+        assertThrows(RuntimeException.class, () -> userService.register(
+                User.builder().username("u2").email("dup@example.com").password("pass").build()
+        ));
+    }
 }
 
