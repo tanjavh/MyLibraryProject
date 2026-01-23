@@ -1,4 +1,4 @@
-package com.example.onlineLibrary.web.integration.controller;
+package com.example.onlineLibrary.web.controller.unit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

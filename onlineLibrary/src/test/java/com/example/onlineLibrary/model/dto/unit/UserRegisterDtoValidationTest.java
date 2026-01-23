@@ -1,5 +1,6 @@
-package com.example.onlineLibrary.model.dto;
+package com.example.onlineLibrary.model.dto.unit;
 
+import com.example.onlineLibrary.model.dto.UserRegisterDto;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;

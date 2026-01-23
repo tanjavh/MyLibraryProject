@@ -1,4 +1,4 @@
-package com.example.onlineLibrary.service.unit.loanService;
+package com.example.onlineLibrary.service.integration;
 
 import com.example.onlineLibrary.model.entity.Loan;
 import com.example.onlineLibrary.model.entity.User;

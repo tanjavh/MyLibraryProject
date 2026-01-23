@@ -1,4 +1,4 @@
-package com.example.onlineLibrary.web.integration.controller;
+package com.example.onlineLibrary.web.controller.integration;
 
 import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.repository.UserRepository;
@@ -51,19 +51,6 @@ class RegisterControllerIntegrationTest {
         assertThat(user.getPassword()).isNotEqualTo("password123"); // enkodovana
     }
 
-//    @Test
-//    void testRegisterUserSuccessfully() throws Exception {
-//        mockMvc.perform(post("/users/register")
-//                        .with(csrf())
-//                        .param("username", "testuser")
-//                        .param("email", "test@example.com")
-//                        .param("password", "password123")
-//                        .param("confirmPassword", "password123"))
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl("/users/login"));
-//
-//        assertThat(userRepository.existsByEmail("test@example.com")).isTrue();
-//    }
     @Test
     void testRegisterPasswordsDoNotMatch() throws Exception {
         mockMvc.perform(post("/users/register")
@@ -129,19 +116,7 @@ class RegisterControllerIntegrationTest {
                 .andExpect(model()
                         .attributeHasFieldErrors("userRegisterDto", "email"));
     }
-//    @Test
-//    void testRegisterPasswordsDoNotMatch() throws Exception {
-//        mockMvc.perform(post("/users/register")
-//                        .with(csrf())
-//                        .param("username", "testuser")
-//                        .param("email", "test@example.com")
-//                        .param("password", "password123")
-//                        .param("confirmPassword", "wrong"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("register"))
-//                .andExpect(model()
-//                        .attributeHasFieldErrors("userRegisterDto", "confirmPassword"));
-//    }
+
 
 
 

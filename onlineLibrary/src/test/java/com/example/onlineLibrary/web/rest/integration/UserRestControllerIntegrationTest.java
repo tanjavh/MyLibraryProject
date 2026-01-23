@@ -1,4 +1,4 @@
-package com.example.onlineLibrary.web.integration.rest;
+package com.example.onlineLibrary.web.rest.integration;
 
 import com.example.onlineLibrary.model.entity.Role;
 import com.example.onlineLibrary.model.entity.User;
@@ -85,6 +85,6 @@ class UserRestControllerIntegrationTest {
     void testGetUserByUsername_notFound() throws Exception {
         mockMvc.perform(get("/api/users/by-username/unknownuser"))
                 .andExpect(status().isNotFound()) // 👈 promenjeno
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("User not found: unknownuser")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Nešto je pošlo po zlu")));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.onlineLibrary.security;
+package com.example.onlineLibrary.security.unit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SpringSecurityIntegrationTest {
+class SpringSecurityTest {
 
     @Autowired
     private MockMvc mockMvc;

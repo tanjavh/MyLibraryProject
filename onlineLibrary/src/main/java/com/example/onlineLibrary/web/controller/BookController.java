@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -33,23 +34,32 @@ public class BookController {
     // ==============================
     @GetMapping
     public String allBooks(Model model, Authentication authentication) {
-        BookInfoResponse[] books = restTemplate.getForObject(libraryUrl, BookInfoResponse[].class);
-        List<BookInfoResponse> bookList = books != null ? List.of(books) : new ArrayList<>();
+        try {
+            BookInfoResponse[] books =
+                    restTemplate.getForObject(libraryUrl, BookInfoResponse[].class);
 
-        // Za svaku knjigu proveri da li ima aktivnu pozajmicu
-        bookList.forEach(book -> {
-            boolean hasActiveLoans = loanService.existsByBookIdAndReturnedFalse(book.getId());
-            book.setHasActiveLoans(hasActiveLoans);
-        });
+            List<BookInfoResponse> bookList =
+                    books != null ? List.of(books) : new ArrayList<>();
 
-        model.addAttribute("books", bookList);
+            bookList.forEach(book -> {
+                boolean hasActiveLoans =
+                        loanService.existsByBookIdAndReturnedFalse(book.getId());
+                book.setHasActiveLoans(hasActiveLoans);
+            });
 
-        if (authentication != null) {
-            model.addAttribute("currentUsername", authentication.getName());
+            model.addAttribute("books", bookList);
+
+            if (authentication != null) {
+                model.addAttribute("currentUsername", authentication.getName());
+            }
+
+            return "books";
+
+        } catch (ResourceAccessException ex) {
+            throw ex; // IDE U @ControllerAdvice
         }
-
-        return "books";
     }
+
     // ==============================
     // Kreiranje nove knjige (ADMIN)
     // ==============================
