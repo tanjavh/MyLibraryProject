@@ -66,13 +66,32 @@
                 <!-- ================= USER AKCIJE ================= -->
 
                 <!-- Dugme Pozajmi ako je dostupna i korisnik NIJE blokiran -->
-                <span th:if="${book.available} and !${currentUserBlocked}">
-                    <form th:action="@{'/books/borrow/' + ${book.id}}"
-                          method="post"
-                          style="display:inline-block;">
-                        <button type="submit">Pozajmi</button>
-                    </form>
-                </span>
+                <span
+                        th:if="${book.available}
+            and !${currentUserBlocked}
+            and !${book.hasActiveLoans}
+            and !${book.borrowedByCurrentUser}
+            and !${maxLoansReached}">
+
+    <form th:action="@{'/books/borrow/' + ${book.id}}"
+          method="post"
+          style="display:inline-block;">
+
+        <button type="submit">
+            Pozajmi
+        </button>
+
+    </form>
+</span>
+
+                <!-- Poruka kada korisnik ima 3 aktivne pozajmice -->
+                <span th:if="${book.available}
+                      and !${currentUserBlocked}
+                      and !${book.hasActiveLoans}
+                      and !${book.borrowedByCurrentUser}
+                      and ${maxLoansReached}">
+    ❌ Već imate maksimalno 3 pozajmljene knjige
+</span>
 
                 <!-- Tekst Pozajmljeno ako nije dostupna -->
                 <span th:unless="${book.available}"

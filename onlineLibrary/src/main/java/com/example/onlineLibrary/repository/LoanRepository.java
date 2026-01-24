@@ -32,4 +32,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     List<Loan> findActiveLoansByUsername(@Param("username") String username);
 
     boolean existsByBookIdAndUserUsernameAndReturnedFalse(Long bookId, String username);
+
+    int countByUser_UsernameAndReturnedFalse(String username);
+
+
 }

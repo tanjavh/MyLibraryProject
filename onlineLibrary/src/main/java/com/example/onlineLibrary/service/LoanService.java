@@ -167,6 +167,7 @@ public class LoanService {
 
     @Transactional
     public void borrowBook(String username, Long bookId) {
+
         // 1️⃣ Pronađi korisnika
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
@@ -176,25 +177,42 @@ public class LoanService {
             throw new RuntimeException("Blokirani korisnici ne mogu pozajmiti nove knjige!");
         }
 
+        // ✅ 2.5️⃣ PROVERA MAKSIMUMA (NOVO, ALI NA PRAVOM MESTU)
+        int activeLoans =
+                loanRepository.countByUser_UsernameAndReturnedFalse(username);
+
+        if (activeLoans >= 3) {
+            throw new IllegalStateException(
+                    "Možete imati najviše 3 pozajmljene knjige istovremeno."
+            );
+        }
+
         // 3️⃣ Proveri dostupnost knjige u LibraryMicroservice
         BookInfoResponse book;
         try {
-            book = restTemplate.getForObject(libraryBaseUrl + "/" + bookId, BookInfoResponse.class);
+            book = restTemplate.getForObject(
+                    libraryBaseUrl + "/" + bookId,
+                    BookInfoResponse.class
+            );
+
             if (book == null || !book.isAvailable()) {
                 throw new RuntimeException("Knjiga nije dostupna za pozajmicu");
             }
         } catch (Exception e) {
-            throw new RuntimeException("Greška pri povezivanju sa LibraryMicroservice: " + e.getMessage());
+            throw new RuntimeException(
+                    "Greška pri povezivanju sa LibraryMicroservice: " + e.getMessage()
+            );
         }
 
-        // 4️⃣ Kreiraj novu pozajmicu i sačuvaj naslov knjige
+        // 4️⃣ Kreiraj novu pozajmicu
         Loan loan = Loan.builder()
                 .bookId(bookId)
-                .bookTitle(book.getTitle())   // čuvamo naslov knjige
+                .bookTitle(book.getTitle())
                 .user(user)
                 .loanDate(LocalDate.now())
                 .returned(false)
                 .build();
+
         loanRepository.save(loan);
 
         // 5️⃣ Update dostupnosti knjige u LibraryMicroservice
@@ -204,9 +222,12 @@ public class LoanService {
                     null
             );
         } catch (Exception e) {
-            System.out.println("Ne mogu da update-ujem dostupnost knjige: " + e.getMessage());
+            System.out.println(
+                    "Ne mogu da update-ujem dostupnost knjige: " + e.getMessage()
+            );
         }
     }
+
 
     @Transactional
     public void returnBookByBookId(Long bookId, String username) {
@@ -236,6 +257,11 @@ public class LoanService {
     public boolean isBorrowedByUser(Long bookId, String currentUsername) {
         return loanRepository
                 .existsByBookIdAndUserUsernameAndReturnedFalse(bookId, currentUsername);
+    }
+
+    public int countActiveLoansByUsername(String username) {
+        return loanRepository
+                .countByUser_UsernameAndReturnedFalse(username);
     }
 
 }

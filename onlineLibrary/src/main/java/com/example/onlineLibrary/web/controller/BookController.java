@@ -51,19 +51,30 @@ public class BookController {
 
         String currentUsername = authentication != null ? authentication.getName() : null;
 
-        bookList.forEach(book -> {
+        int activeLoansCount = 0;
+
+        if (currentUsername != null) {
+            activeLoansCount =
+                    loanService.countActiveLoansByUsername(currentUsername);
+        }
+
+
+        for (BookInfoResponse book : bookList) {
             boolean hasActiveLoans =
                     loanService.existsByBookIdAndReturnedFalse(book.getId());
             book.setHasActiveLoans(hasActiveLoans);
 
-            boolean borrowedByCurrentUser = currentUsername != null &&
-                    loanService.isBorrowedByUser(book.getId(), currentUsername);
+            boolean borrowedByCurrentUser =
+                    currentUsername != null &&
+                            loanService.isBorrowedByUser(book.getId(), currentUsername);
+
             book.setBorrowedByCurrentUser(borrowedByCurrentUser);
-        });
+        }
 
         model.addAttribute("books", bookList);
         model.addAttribute("currentUsername", currentUsername);
         model.addAttribute("sort", sort); // (nije obavezno, ali korisno)
+        model.addAttribute("maxLoansReached", activeLoansCount >= 3);
 
         return "books";
     }
