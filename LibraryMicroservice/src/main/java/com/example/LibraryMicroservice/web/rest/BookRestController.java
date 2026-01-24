@@ -51,12 +51,6 @@ public class BookRestController {
         }
     }
 
-    @GetMapping
-    public List<BookInfoResponse> getAllBooks() {
-        return bookService.findAll().stream()
-                .map(bookService::toBookInfo)
-                .toList();
-    }
     @PostMapping
     public ResponseEntity<Void> createBook(@RequestBody BookCreateDto dto) {
         bookService.createFromDto(dto);
@@ -79,6 +73,14 @@ public class BookRestController {
 
         bookService.updateAvailability(id, available);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping
+    public List<BookInfoResponse> getAllBooks(
+            @RequestParam(required = false) String sort) {
+
+        return bookService.findAllSorted(sort).stream()
+                .map(bookService::toBookInfo)
+                .toList();
     }
 
 }

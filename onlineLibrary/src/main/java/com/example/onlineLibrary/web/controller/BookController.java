@@ -33,32 +33,41 @@ public class BookController {
     // Prikaz svih knjiga
     // ==============================
     @GetMapping
-    public String allBooks(Model model, Authentication authentication) {
-        try {
-            BookInfoResponse[] books =
-                    restTemplate.getForObject(libraryUrl, BookInfoResponse[].class);
+    public String allBooks(
+            @RequestParam(required = false) String sort,
+            Model model,
+            Authentication authentication) {
 
-            List<BookInfoResponse> bookList =
-                    books != null ? List.of(books) : new ArrayList<>();
-
-            bookList.forEach(book -> {
-                boolean hasActiveLoans =
-                        loanService.existsByBookIdAndReturnedFalse(book.getId());
-                book.setHasActiveLoans(hasActiveLoans);
-            });
-
-            model.addAttribute("books", bookList);
-
-            if (authentication != null) {
-                model.addAttribute("currentUsername", authentication.getName());
-            }
-
-            return "books";
-
-        } catch (ResourceAccessException ex) {
-            throw ex; // IDE U @ControllerAdvice
+        String url = libraryUrl;
+        if (sort != null && !sort.isBlank()) {
+            url += "?sort=" + sort;
         }
+
+        BookInfoResponse[] books =
+                restTemplate.getForObject(url, BookInfoResponse[].class);
+
+        List<BookInfoResponse> bookList =
+                books != null ? List.of(books) : new ArrayList<>();
+
+        String currentUsername = authentication != null ? authentication.getName() : null;
+
+        bookList.forEach(book -> {
+            boolean hasActiveLoans =
+                    loanService.existsByBookIdAndReturnedFalse(book.getId());
+            book.setHasActiveLoans(hasActiveLoans);
+
+            boolean borrowedByCurrentUser = currentUsername != null &&
+                    loanService.isBorrowedByUser(book.getId(), currentUsername);
+            book.setBorrowedByCurrentUser(borrowedByCurrentUser);
+        });
+
+        model.addAttribute("books", bookList);
+        model.addAttribute("currentUsername", currentUsername);
+        model.addAttribute("sort", sort); // (nije obavezno, ali korisno)
+
+        return "books";
     }
+
 
     // ==============================
     // Kreiranje nove knjige (ADMIN)

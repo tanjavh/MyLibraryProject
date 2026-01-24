@@ -233,4 +233,9 @@ public class LoanService {
     }
 
 
+    public boolean isBorrowedByUser(Long bookId, String currentUsername) {
+        return loanRepository
+                .existsByBookIdAndUserUsernameAndReturnedFalse(bookId, currentUsername);
+    }
+
 }

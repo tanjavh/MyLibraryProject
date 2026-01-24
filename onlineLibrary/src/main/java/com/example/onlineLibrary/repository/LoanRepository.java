@@ -30,4 +30,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     @Query("SELECT l FROM Loan l JOIN FETCH l.user WHERE l.user.username = :username AND l.returned = false")
     List<Loan> findActiveLoansByUsername(@Param("username") String username);
+
+    boolean existsByBookIdAndUserUsernameAndReturnedFalse(Long bookId, String username);
 }

@@ -24,6 +24,5 @@ public class BookInfoResponse {
     private boolean hasActiveLoans; // za kontrolu dugmeta Obriši
 
 
-
-
+    public boolean borrowedByCurrentUser;
 }

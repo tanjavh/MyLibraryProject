@@ -121,4 +121,16 @@ public class BookService {
                 .available(book.isAvailable())
                 .build();
     }
+    public List<Book> findAllSorted(String sort) {
+        if ("title".equalsIgnoreCase(sort)) {
+            return bookRepository.findAllOrderByTitle();
+        }
+
+        if ("author".equalsIgnoreCase(sort)) {
+            return bookRepository.findAllOrderByAuthor();
+        }
+
+        // default ponašanje – kao do sada
+        return bookRepository.findAll();
+    }
 }

@@ -15,6 +15,12 @@
 <div sec:authorize="hasRole('ADMIN')">
     <a th:href="@{/books/create}">➕ Dodaj knjigu</a>
 </div>
+<div style="margin: 10px 0;">
+    Sortiraj:
+    <a th:href="@{/books(sort='title')}">Po nazivu</a> |
+    <a th:href="@{/books(sort='author')}">Po autoru</a>
+</div>
+
 
 <div class="table-wrapper">
     <table>
