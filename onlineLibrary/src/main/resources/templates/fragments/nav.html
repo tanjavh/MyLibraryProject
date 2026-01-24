@@ -4,19 +4,22 @@
 <body>
 <nav>
   <ul>
-    <!-- Index - svi korisnici-->
+    <!-- Index - samo anonimni korisnici -->
     <li sec:authorize="isAnonymous()">
       <a th:href="@{/}">Index</a>
     </li>
-    <!-- Home - samo ulogovani korisnici -->
-    <li><a th:href="@{/home}">Home</a></li>
 
-    <!-- Knjige - samo ulogovani korisnici -->
+    <!-- Home - svi ulogovani korisnici -->
+    <li sec:authorize="isAuthenticated()">
+      <a th:href="@{/home}">Home</a>
+    </li>
+
+    <!-- Knjige - svi ulogovani korisnici -->
     <li sec:authorize="isAuthenticated()">
       <a th:href="@{/books}">Knjige</a>
     </li>
 
-    <!-- Moje pozajmice - samo ulogovani korisnici -->
+    <!-- Moje pozajmice -->
     <li sec:authorize="isAuthenticated()">
       <a th:href="@{/loans/active}">Moje pozajmice</a>
     </li>
@@ -37,6 +40,11 @@
     </li>
     <li sec:authorize="isAnonymous()">
       <a th:href="@{/users/register}">Register</a>
+    </li>
+
+    <!-- Izmena korisničkog imena - svi ulogovani -->
+    <li sec:authorize="isAuthenticated()">
+      <a th:href="@{/users/profile/edit}">Izmeni korisničko ime</a>
     </li>
 
     <!-- Logout - ulogovani korisnici -->

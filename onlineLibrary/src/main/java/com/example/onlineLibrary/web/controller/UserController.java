@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+
+import java.security.Principal;
 import java.util.Collections;
 
 @Controller
@@ -157,6 +159,25 @@ public class UserController {
         userService.register(user);
 
         return "redirect:/users/login";
+    }
+    @GetMapping("/profile/edit")
+    public String editUsernameForm(Model model, Principal principal) {
+        User currentUser = userService.getCurrentUser();
+        model.addAttribute("currentUsername", currentUser.getUsername());
+        return "profile-edit";
+    }
+
+    @PostMapping("/profile/edit")
+    public String updateUsername(@RequestParam String newUsername, Principal principal, Model model) {
+        User currentUser = userService.getCurrentUser();
+        try {
+            userService.updateUserUsername(currentUser.getUsername(), newUsername);
+            return "redirect:/books"; // ili neka druga stranica
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("currentUsername", currentUser.getUsername());
+            return "profile-edit";
+        }
     }
 
 

@@ -14,11 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final LoanRepository loanRepository;
+
 
 
     // Spring Security login
@@ -129,5 +130,20 @@ public class UserService implements UserDetailsService {
             case ADMIN -> "Admin";
             case USER -> "Korisnik";
         };
+    }
+    @Transactional
+    public void updateUserUsername(String oldUsername, String newUsername) {
+        User user = userRepository.findByUsername(oldUsername)
+                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
+
+        // Optional: provera da username nije zauzet
+        if (!user.getUsername().equals(newUsername) &&
+                userRepository.existsByUsername(newUsername)) {
+            throw new RuntimeException("Username je već zauzet!");
+        }
+
+        user.setUsername(newUsername);
+
+        userRepository.save(user);
     }
 }

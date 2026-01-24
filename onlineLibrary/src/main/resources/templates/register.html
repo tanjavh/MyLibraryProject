@@ -20,7 +20,7 @@
              th:errorclass="'is-invalid'">
       <div class="invalid-feedback"
            th:if="${#fields.hasErrors('username')}"
-           th:errors="*{email}">Greška
+           th:errors="*{username}">Greška
       </div>
     </div> <!-- EMAIL -->
     <div>
@@ -46,7 +46,7 @@
            th:errorclass="'is-invalid'">
       <div class="invalid-feedback"
            th:if="${#fields.hasErrors('password')}"
-           th:errors="*{email}">Greška
+           th:errors="*{password}">Greška
       </div>
   </div> <!-- PASSWORD -->
     <div>
@@ -59,7 +59,7 @@
            th:errorclass="'is-invalid'">
       <div class="invalid-feedback"
            th:if="${#fields.hasErrors('confirmPassword')}"
-           th:errors="*{email}">Greška
+           th:errors="*{confirmPassword}">Greška
       </div>
   </div> <!-- ROLE -->
     <button type="submit">Registruj se</button>
