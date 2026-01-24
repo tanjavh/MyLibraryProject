@@ -3,6 +3,7 @@ package com.example.onlineLibrary.service.integration;
 import com.example.onlineLibrary.model.entity.Loan;
 import com.example.onlineLibrary.model.entity.User;
 import com.example.onlineLibrary.repository.LoanRepository;
+import com.example.onlineLibrary.repository.LoanRepository;
 import com.example.onlineLibrary.repository.UserRepository;
 import com.example.onlineLibrary.service.LoanSchedulerService;
 import org.junit.jupiter.api.Test;

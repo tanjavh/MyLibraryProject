@@ -1,0 +1,65 @@
+[33mcommit 894af1b6078274d487b1563038cd76ff484ac75a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Fri Jan 23 20:32:43 2026 +0100
+
+    All tests finished
+
+[33mcommit e8da8935c1370ab95d1f022160eb40703d20841c[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Wed Jan 21 23:12:09 2026 +0100
+
+    More tests...
+
+[33mcommit ee99ef80fe28f959da2afdf1454f89d47c5de322[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Tue Jan 20 23:31:51 2026 +0100
+
+    Fixed error
+
+[33mcommit 34779de1c421c5cd099cc65dbd6b7cefefe4f0f7[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Tue Jan 20 22:39:23 2026 +0100
+
+    Unit and integration tests in online library
+
+[33mcommit 60f46bff00c21a62e469aefb114480076f5fba33[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Sun Jan 18 17:23:08 2026 +0100
+
+    All main functionalities
+
+[33mcommit a04e3f3e7bc773f2885da062c3ab6203b65d1581[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Sat Jan 17 21:48:54 2026 +0100
+
+    Style update, forms redesign and new features
+
+[33mcommit 4630ea014ab0a98ca2d3f77a36be31705a0ab3d1[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Sat Jan 17 14:54:48 2026 +0100
+
+    Feature Upgrade
+
+[33mcommit 23f74950d6e7380de54fada0378fbd689b1c070a[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Fri Jan 16 23:53:20 2026 +0100
+
+    All functions
+
+[33mcommit edaf4a152045212c18297b19e53eea1315bea380[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Thu Jan 15 18:54:45 2026 +0100
+
+    Update LoanService and loans-all template
+
+[33mcommit a2c5d218b0bb14e4e4dc71d78b0d8661c68538f7[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Thu Jan 15 00:02:14 2026 +0100
+
+    Update onlineLibrary and LibraryMicroservice changes
+
+[33mcommit ae8ab61cf3cad95c4e23bd7cb20c841009ebc17d[m
+Author: tanjavh <tatjana.vh@gmail.com>
+Date:   Tue Jan 13 18:50:28 2026 +0100
+
+    Clean Initial commit – onlineLibrary + LibraryMicroservice

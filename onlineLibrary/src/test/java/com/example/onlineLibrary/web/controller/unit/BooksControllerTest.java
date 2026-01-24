@@ -48,4 +48,3 @@ class BooksControllerTest {
         verify(restTemplate).postForObject(anyString(), any(), eq(Void.class));
     }
 }
-

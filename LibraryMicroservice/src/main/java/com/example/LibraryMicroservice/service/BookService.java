@@ -9,6 +9,7 @@ import com.example.LibraryMicroservice.model.entity.Book;
 import com.example.LibraryMicroservice.model.entity.Category;
 import com.example.LibraryMicroservice.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,6 +25,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final AuthorService authorService;
     private final CategoryService categoryService;
+    private final ModelMapper modelMapper;
 
     // Dohvata sve knjige
     public List<Book> findAll() {
@@ -54,15 +56,14 @@ public class BookService {
     }
 
     public Book createFromDto(BookCreateDto dto) {
+
         Author author;
 
         if (dto.getNewAuthorName() != null && !dto.getNewAuthorName().isBlank()) {
-            // novi autor
             author = new Author();
             author.setName(dto.getNewAuthorName());
             author = authorService.save(author);
         } else if (dto.getAuthorId() != null) {
-            // postojeći autor
             author = authorService.findById(dto.getAuthorId())
                     .orElseThrow(() -> new RuntimeException("Izabrani autor ne postoji!"));
         } else {
@@ -72,13 +73,15 @@ public class BookService {
         Category category = categoryService.findByName(dto.getCategory())
                 .orElseGet(() -> categoryService.save(new Category(dto.getCategory())));
 
-        Book book = Book.builder()
-                .title(dto.getTitle())
-                .author(author)
-                .category(category)
-                .year(dto.getYear() != null ? dto.getYear() : 2000)
-                .available(true)
-                .build();
+        // ✅ ModelMapper radi samo mapiranje
+        Book book = modelMapper.map(dto, Book.class);
+
+        // relacije se postavljaju ručno
+        book.setAuthor(author);
+        book.setCategory(category);
+
+        // dostupnost je poslovno pravilo mikroservisa
+        book.setAvailable(true);
 
         return bookRepository.save(book);
     }
@@ -119,4 +122,3 @@ public class BookService {
                 .build();
     }
 }
-
