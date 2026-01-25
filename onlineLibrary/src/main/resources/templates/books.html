@@ -2,35 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Sve knjige</title>
+    <title th:text="#{books.title}">Sve knjige</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
+
 <div th:replace="fragments/nav :: nav"></div>
 
-<h1>Sve knjige</h1>
+<h1 th:text="#{books.heading}">Sve knjige</h1>
 
 <!-- Dugme Dodaj knjigu samo za admina -->
 <div sec:authorize="hasRole('ADMIN')">
-    <a th:href="@{/books/create}">➕ Dodaj knjigu</a>
-</div>
-<div style="margin: 10px 0;">
-    Sortiraj:
-    <a th:href="@{/books(sort='title')}">Po nazivu</a> |
-    <a th:href="@{/books(sort='author')}">Po autoru</a>
+    <a th:href="@{/books/create}"
+       th:text="#{books.add}">
+        ➕ Dodaj knjigu
+    </a>
 </div>
 
+<div style="margin: 10px 0;">
+    <span th:text="#{books.sort}">Sortiraj:</span>
+    <a th:href="@{/books(sort='title')}"
+       th:text="#{books.sort.title}">
+        Po nazivu
+    </a> |
+    <a th:href="@{/books(sort='author')}"
+       th:text="#{books.sort.author}">
+        Po autoru
+    </a>
+</div>
 
 <div class="table-wrapper">
     <table>
         <thead>
         <tr>
-            <th>Naslov</th>
-            <th>Autor</th>
-            <th>Kategorija</th>
-            <th>Godina izdavanja</th>
-            <th>Akcije</th>
+            <th th:text="#{books.table.title}">Naslov</th>
+            <th th:text="#{books.table.author}">Autor</th>
+            <th th:text="#{books.table.category}">Kategorija</th>
+            <th th:text="#{books.table.year}">Godina izdavanja</th>
+            <th th:text="#{books.table.actions}">Akcije</th>
         </tr>
         </thead>
 
@@ -38,70 +48,67 @@
         <tr th:each="book : ${books}">
             <td th:text="${book.title}">Naslov</td>
             <td th:text="${book.authorName}">Autor</td>
-            <td th:text="${book.category}">Kategorija</td>
+            <td th:text="#{'category.' + ${book.category}}">Kategorija</td>
             <td th:text="${book.year}">Godina</td>
 
             <td>
 
                 <!-- ================= ADMIN AKCIJE ================= -->
-
                 <span sec:authorize="hasRole('ADMIN')">
 
-                    <!-- Dugme Obriši AKO nema aktivne pozajmice -->
                     <form th:if="${!book.hasActiveLoans}"
                           th:action="@{'/books/delete/' + ${book.id}}"
                           method="post"
                           style="display:inline-block;">
-                        <button type="submit">Obriši</button>
+                        <button type="submit"
+                                th:text="#{books.delete}">
+                            Obriši
+                        </button>
                     </form>
 
-                    <!-- Poruka ako knjiga ima aktivne pozajmice -->
                     <span th:if="${book.hasActiveLoans}"
-                          style="color: gray; font-style: italic; margin-left: 8px;">
+                          style="color: gray; font-style: italic; margin-left: 8px;"
+                          th:text="#{books.cannotDelete}">
                         Ne može se obrisati – knjiga je pozajmljena
                     </span>
-
                 </span>
 
                 <!-- ================= USER AKCIJE ================= -->
 
-                <!-- Dugme Pozajmi ako je dostupna i korisnik NIJE blokiran -->
-                <span
-                        th:if="${book.available}
-            and !${currentUserBlocked}
-            and !${book.hasActiveLoans}
-            and !${book.borrowedByCurrentUser}
-            and !${maxLoansReached}">
+                <span th:if="${book.available}
+                        and !${currentUserBlocked}
+                        and !${book.hasActiveLoans}
+                        and !${book.borrowedByCurrentUser}
+                        and !${maxLoansReached}">
 
-    <form th:action="@{'/books/borrow/' + ${book.id}}"
-          method="post"
-          style="display:inline-block;">
+                    <form th:action="@{'/books/borrow/' + ${book.id}}"
+                          method="post"
+                          style="display:inline-block;">
+                        <button type="submit"
+                                th:text="#{books.borrow}">
+                            Pozajmi
+                        </button>
+                    </form>
+                </span>
 
-        <button type="submit">
-            Pozajmi
-        </button>
-
-    </form>
-</span>
-
-                <!-- Poruka kada korisnik ima 3 aktivne pozajmice -->
                 <span th:if="${book.available}
                       and !${currentUserBlocked}
                       and !${book.hasActiveLoans}
                       and !${book.borrowedByCurrentUser}
-                      and ${maxLoansReached}">
-    ❌ Već imate maksimalno 3 pozajmljene knjige
-</span>
+                      and ${maxLoansReached}"
+                      th:text="#{books.maxLoans}">
+                    ❌ Već imate maksimalno 3 pozajmljene knjige
+                </span>
 
-                <!-- Tekst Pozajmljeno ako nije dostupna -->
                 <span th:unless="${book.available}"
-                      style="margin-left: 10px; color: gray; font-weight: bold;">
+                      style="margin-left: 10px; color: gray; font-weight: bold;"
+                      th:text="#{books.borrowed}">
                     Pozajmljeno
                 </span>
 
-                <!-- Poruka ako je korisnik blokiran -->
                 <span th:if="${book.available} and ${currentUserBlocked}"
-                      style="margin-left: 10px; color: red; font-weight: bold;">
+                      style="margin-left: 10px; color: red; font-weight: bold;"
+                      th:text="#{books.blocked}">
                     Blokiran: ne možeš pozajmiti
                 </span>
 

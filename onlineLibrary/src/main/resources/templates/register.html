@@ -1,72 +1,116 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Registracija</title>
+  <title th:text="#{register.title}">Registracija</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
+
 <div th:replace="fragments/nav :: nav"></div>
-<h1>Registracija</h1>
+
+<h1 th:text="#{register.heading}">Registracija</h1>
+
 <div class="auth-container">
-  <form th:action="@{/users/register}" th:object="${userRegisterDto}" th:method="post">
-    <!-- KORISNIČKO IME -->
+  <form th:action="@{/users/register}"
+        th:object="${userRegisterDto}"
+        method="post">
+
+    <!-- USERNAME -->
     <div>
-      <label for="username">Korisničko ime:</label>
+      <label for="username" th:text="#{register.username}">
+        Korisničko ime:
+      </label>
       <input type="text"
              id="username"
              th:field="*{username}"
-             placeholder="Unesite korisničko ime"
-             th:class="form-control"
-             th:errorclass="'is-invalid'">
+             th:placeholder="#{register.username.placeholder}"
+             class="form-control"
+             th:errorclass="is-invalid">
+
       <div class="invalid-feedback"
            th:if="${#fields.hasErrors('username')}"
-           th:errors="*{username}">Greška
+           th:errors="*{username}">
       </div>
-    </div> <!-- EMAIL -->
-    <div>
-      <label for="email">Email:</label>
-    <input type="email"
-           id="email"
-           th:field="*{email}"
-           placeholder="Unesite email"
-           th:class="form-control"
-           th:errorclass="is-invalid">
-    <div class="invalid-feedback"
-         th:if="${#fields.hasErrors('email')}"
-         th:errors="*{email}">Greška
     </div>
-  </div> <!-- PASSWORD -->
+
+    <!-- EMAIL -->
     <div>
-      <label for="password">Lozinka:</label>
-    <input type="password"
-           id="password"
-           th:field="*{password}"
-           placeholder="Unesite lozinku"
-           th:class="form-control"
-           th:errorclass="'is-invalid'">
+      <label for="email" th:text="#{register.email}">
+        Email:
+      </label>
+      <input type="email"
+             id="email"
+             th:field="*{email}"
+             th:placeholder="#{register.email.placeholder}"
+             class="form-control"
+             th:errorclass="is-invalid">
+
+      <div class="invalid-feedback"
+           th:if="${#fields.hasErrors('email')}"
+           th:errors="*{email}">
+      </div>
+    </div>
+
+    <!-- PASSWORD -->
+    <div>
+      <label for="password" th:text="#{register.password}">
+        Lozinka:
+      </label>
+      <input type="password"
+             id="password"
+             th:field="*{password}"
+             th:placeholder="#{register.password.placeholder}"
+             class="form-control"
+             th:errorclass="is-invalid">
+
       <div class="invalid-feedback"
            th:if="${#fields.hasErrors('password')}"
-           th:errors="*{password}">Greška
+           th:errors="*{password}">
       </div>
-  </div> <!-- PASSWORD -->
+    </div>
+
+    <!-- CONFIRM PASSWORD -->
     <div>
-      <label for="password">Potvrdite lozinku:</label>
-    <input type="password"
-           id="confirmPassword"
-           th:field="*{confirmPassword}"
-           placeholder="Potvrdite lozinku"
-           th:class="form-control"
-           th:errorclass="'is-invalid'">
+      <label for="confirmPassword" th:text="#{register.confirmPassword}">
+        Potvrdite lozinku:
+      </label>
+      <input type="password"
+             id="confirmPassword"
+             th:field="*{confirmPassword}"
+             th:placeholder="#{register.confirmPassword.placeholder}"
+             class="form-control"
+             th:errorclass="is-invalid">
+
       <div class="invalid-feedback"
            th:if="${#fields.hasErrors('confirmPassword')}"
-           th:errors="*{confirmPassword}">Greška
+           th:errors="*{confirmPassword}">
       </div>
-  </div> <!-- ROLE -->
-    <button type="submit">Registruj se</button>
+    </div>
+
+    <button type="submit" th:text="#{register.submit}">
+      Registruj se
+    </button>
+
   </form>
 </div>
-<p>Već imate nalog?
-  <a th:href="@{/users/login}">Prijavite se ovde</a>
-</p>
+
+<div class="login-footer">
+
+  <p class="no-account">
+    <span th:text="#{register.haveAccount}">Već imate nalog?</span>
+    <a th:href="@{/users/login}"
+       th:text="#{register.loginLink}">
+      Prijavite se ovde
+    </a>
+  </p>
+
+  <div class="language-selector">
+    <a th:href="@{?lang=sr}">🇷🇸 SR</a> |
+    <a th:href="@{?lang=en}">🇬🇧 EN</a>
+  </div>
+
+</div>
+
 </body>
 </html>

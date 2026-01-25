@@ -2,16 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Moje aktivne pozajmice</title>
+    <title th:text="#{loans.active.title}">Moje aktivne pozajmice</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+
 <div th:replace="fragments/nav :: nav"></div>
 
-<h1>Moje aktivne pozajmice</h1>
+<h1 th:text="#{loans.active.heading}">Moje aktivne pozajmice</h1>
 
 <!-- Ako je korisnik blokiran -->
-<p th:if="${currentUserBlocked}" style="color:red;">
+<p th:if="${currentUserBlocked}"
+   style="color:red;"
+   th:text="#{loans.active.blockedWarning}">
     ⚠️ Vaš nalog je blokiran zbog nevraćenih knjiga starijih od 30 dana.
 </p>
 
@@ -19,16 +22,17 @@
     <table>
         <thead>
         <tr>
-            <th>Naslov knjige</th>
-            <th>Autor</th>
-            <th>Kategorija</th>
-            <th>Datum pozajmice</th>
-            <th>Rok vraćanja</th>
-            <th>Datum vraćanja</th>
-            <th>Status</th>
-            <th>Akcije</th>
+            <th th:text="#{loans.table.title}">Naslov knjige</th>
+            <th th:text="#{loans.table.author}">Autor</th>
+            <th th:text="#{loans.table.category}">Kategorija</th>
+            <th th:text="#{loans.table.loanDate}">Datum pozajmice</th>
+            <th th:text="#{loans.table.dueDate}">Rok vraćanja</th>
+            <th th:text="#{loans.table.returnDate}">Datum vraćanja</th>
+            <th th:text="#{loans.table.status}">Status</th>
+            <th th:text="#{loans.table.actions}">Akcije</th>
         </tr>
         </thead>
+
         <tbody>
         <tr th:each="loan : ${loans}">
             <td th:text="${loan.bookTitle}">Naslov</td>
@@ -38,19 +42,40 @@
             <td th:text="${loan.loanDate.plusDays(15)}">Rok vraćanja</td>
             <td th:text="${loan.returnDate}">Datum vraćanja</td>
             <td>
-                <span th:text="${loan.returned ? 'Vraćeno' : 'Pozajmljeno'}">Status</span>
-                <span th:if="${loan.overdue}" style="color: orange; font-weight: bold; margin-left: 10px;">
-                ⚠️ Rok za vraćanje je prekoračen (15+ dana)
-            </span>
+                <span>
+                <span th:if="${loan.returned}"
+                       th:text="#{loans.status.returned}">
+    Vraćeno
+</span>
+
+                <span th:unless="${loan.returned}"
+                      th:text="#{loans.status.borrowed}">
+    Pozajmljeno
+</span>
+                    Status
+                </span>
+
+                <span th:if="${loan.overdue}"
+                      style="color: orange; font-weight: bold; margin-left: 10px;"
+                      th:text="#{loans.overdue}">
+                    ⚠️ Rok za vraćanje je prekoračen (15+ dana)
+                </span>
             </td>
+
             <td>
-                <form th:if="!${loan.returned}" th:action="@{'/loans/return/' + ${loan.loanId}}" method="post">
-                    <button type="submit">Vrati</button>
+                <form th:if="!${loan.returned}"
+                      th:action="@{'/loans/return/' + ${loan.loanId}}"
+                      method="post">
+                    <button type="submit"
+                            th:text="#{loans.return}">
+                        Vrati
+                    </button>
                 </form>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
+
 </body>
 </html>

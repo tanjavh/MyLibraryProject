@@ -315,5 +315,33 @@ h1 {
     background-color: #125ca1;
     transform: scale(1.02);
 }
+.nav-right {
+    float: right;
+ }
+ .login-footer {
+   margin-top: 20px;
+   text-align: center;
+ }
+
+ .no-account {
+   font-size: 0.9rem;   /* malo manji font */
+   margin-bottom: 8px;
+ }
+
+ .no-account a {
+   margin-left: 5px;
+   font-weight: 500;
+ }
+
+ .language-selector {
+   font-size: 0.85rem;
+ }
+
+ .language-selector a {
+   text-decoration: none;
+   margin: 0 4px;
+ }
+
+
 
 

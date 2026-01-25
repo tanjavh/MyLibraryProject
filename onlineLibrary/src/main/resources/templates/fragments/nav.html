@@ -2,58 +2,69 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
+
 <nav>
   <ul>
-    <!-- Index - samo anonimni korisnici -->
+
+    <!-- Index – samo anonimni -->
     <li sec:authorize="isAnonymous()">
-      <a th:href="@{/}">Index</a>
+      <a th:href="@{/}" th:text="#{nav.index}">Index</a>
     </li>
 
-    <!-- Home - svi ulogovani korisnici -->
+    <!-- Home – ulogovani -->
     <li sec:authorize="isAuthenticated()">
-      <a th:href="@{/home}">Home</a>
+      <a th:href="@{/home}" th:text="#{nav.home}">Home</a>
     </li>
 
-    <!-- Knjige - svi ulogovani korisnici -->
+    <!-- Knjige -->
     <li sec:authorize="isAuthenticated()">
-      <a th:href="@{/books}">Knjige</a>
+      <a th:href="@{/books}" th:text="#{nav.books}">Knjige</a>
     </li>
 
     <!-- Moje pozajmice -->
     <li sec:authorize="isAuthenticated()">
-      <a th:href="@{/loans/active}">Moje pozajmice</a>
+      <a th:href="@{/loans/active}" th:text="#{nav.loans}">Moje pozajmice</a>
     </li>
 
-    <!-- Korisnici - samo admin -->
+    <!-- Korisnici – ADMIN -->
     <li sec:authorize="hasRole('ADMIN')">
-      <a th:href="@{/users}">Korisnici</a>
+      <a th:href="@{/users}" th:text="#{nav.users}">Korisnici</a>
     </li>
 
-    <!-- Sve pozajmice - samo admin -->
+    <!-- Sve pozajmice – ADMIN -->
     <li sec:authorize="hasRole('ADMIN')">
-      <a th:href="@{/loans/all}">Sve pozajmice</a>
+      <a th:href="@{/loans/all}" th:text="#{nav.loans.all}">Sve pozajmice</a>
     </li>
 
-    <!-- Login i Register - anonimni korisnici -->
+    <!-- Login / Register – anonimni -->
     <li sec:authorize="isAnonymous()">
-      <a th:href="@{/users/login}">Login</a>
-    </li>
-    <li sec:authorize="isAnonymous()">
-      <a th:href="@{/users/register}">Register</a>
+      <a th:href="@{/users/login}" th:text="#{nav.login}">Login</a>
     </li>
 
-    <!-- Izmena korisničkog imena - svi ulogovani -->
+    <li sec:authorize="isAnonymous()">
+      <a th:href="@{/users/register}" th:text="#{nav.register}">Register</a>
+    </li>
+
+    <!-- Izmena korisničkog imena -->
     <li sec:authorize="isAuthenticated()">
-      <a th:href="@{/users/profile/edit}">Izmeni korisničko ime</a>
+      <a th:href="@{/users/profile/edit}" th:text="#{nav.profile}">Izmeni korisničko ime</a>
     </li>
 
-    <!-- Logout - ulogovani korisnici -->
+    <!-- JEZIK (desno) -->
+    <li style="float:right;">
+      <a th:href="@{?lang=sr}">🇷🇸 SR</a> |
+      <a th:href="@{?lang=en}">🇬🇧 EN</a>
+    </li>
+
+    <!-- Logout -->
     <li sec:authorize="isAuthenticated()">
       <form th:action="@{/logout}" method="post" style="display:inline">
-        <button type="submit">Logout</button>
+        <button type="submit" th:text="#{nav.logout}">Logout</button>
       </form>
     </li>
+
   </ul>
 </nav>
+
 </body>
 </html>

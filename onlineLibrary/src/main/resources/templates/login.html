@@ -1,29 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Login</title>
+  <meta charset="UTF-8">
+  <title th:text="#{login.title}">Login</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+
+<!-- Nav već koristi i18n -->
 <div th:replace="fragments/nav :: nav"></div>
-<h1>Login</h1>
+
+<h1 th:text="#{login.heading}">Login</h1>
+
 <div class="auth-container">
   <form th:action="@{/users/login}" method="post">
-    <div> <label>Username:</label>
-      <input type="text" name="username" required placeholder="Korisničko ime"/>
-    </div> <div> <label>Password:</label>
-    <input type="password" name="password" required placeholder="Lozinka"/>
-    <p th:if="${param.error}" class="text-danger">
-      Pogrešno korisničko ime ili lozinka
-    </p>
 
+    <div>
+      <label th:text="#{login.username}">Username:</label>
+      <input type="text" name="username" required
+             th:placeholder="#{login.username.placeholder}" placeholder="Korisničko ime"/>
+    </div>
 
-  </div> <div> <button type="submit">Prijavi se</button>
-  </div>
+    <div>
+      <label th:text="#{login.password}">Password:</label>
+      <input type="password" name="password" required
+             th:placeholder="#{login.password.placeholder}" placeholder="Lozinka"/>
+      <p th:if="${param.error}" class="text-danger" th:text="#{login.error}">
+        Pogrešno korisničko ime ili lozinka
+      </p>
+    </div>
+
+    <div>
+      <button type="submit" th:text="#{login.submit}">Prijavi se</button>
+    </div>
+
   </form>
 </div>
-<p>Nemate nalog?
-<a th:href="@{/users/register}">Registrujte se ovde</a>
-</p>
+
+<div class="login-footer">
+
+  <p class="no-account">
+    <span th:text="#{login.noAccount}">Nemate nalog?</span>
+    <a th:href="@{/users/register}"
+       th:text="#{login.registerLink}">
+      Registrujte se ovde
+    </a>
+  </p>
+
+  <div class="language-selector">
+    <a th:href="@{?lang=sr}">🇷🇸 SR</a> |
+    <a th:href="@{?lang=en}">🇬🇧 EN</a>
+  </div>
+</div>
+
 </body>
 </html>

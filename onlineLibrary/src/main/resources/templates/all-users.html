@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Svi korisnici</title>
+  <title th:text="#{users.title}">Svi korisnici</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div th:replace="fragments/nav :: nav"></div>
-<h1>Svi korisnici</h1>
 
-<!-- Dugme za dodavanje korisnika uklonjeno -->
+<h1 th:text="#{users.title}">Svi korisnici</h1>
+
 <div class="table-wrapper">
   <table>
     <thead>
     <tr>
-      <th>ID</th>
-      <th>Korisničko ime</th>
-      <th>Email</th>
-      <th>Uloga</th>
-      <th>Da li je aktivan korisnik</th>
-      <th>Akcije</th>
+      <th th:text="#{users.id}">ID</th>
+      <th th:text="#{users.username}">Korisničko ime</th>
+      <th th:text="#{users.email}">Email</th>
+      <th th:text="#{users.role}">Uloga</th>
+      <th th:text="#{users.active}">Da li je aktivan korisnik</th>
+      <th th:text="#{users.actions}">Akcije</th>
     </tr>
     </thead>
     <tbody>
@@ -33,23 +33,20 @@
         <form th:if="${!user.hasActiveLoans and user.username != #authentication.name}"
               th:action="@{'/users/delete/' + ${user.id}}"
               method="post" style="display:inline-block;">
-          <button type="submit">Obriši</button>
+          <button type="submit" th:text="#{users.deleteBtn}">Obriši</button>
         </form>
 
         <!-- Poruka ako ne može da se obriše -->
-        <span th:if="${user.hasActiveLoans}" style="color: gray; font-style: italic;">
-                    Ne može se obrisati - ima aktivne pozajmice
-                </span>
+        <span th:if="${user.hasActiveLoans}" style="color: gray; font-style: italic;"
+              th:text="#{users.cannotDeleteLoan}">Ne može se obrisati - ima aktivne pozajmice</span>
 
         <!-- Poruka ako admin pokušava da obriše samog sebe -->
-        <span th:if="${user.username == #authentication.name}" style="color: gray; font-style: italic;">
-                    Ne možete obrisati sebe
-                </span>
+        <span th:if="${user.username == #authentication.name}" style="color: gray; font-style: italic;"
+              th:text="#{users.cannotDeleteSelf}">Ne možete obrisati sebe</span>
       </td>
     </tr>
     </tbody>
   </table>
-
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Home</title>
+  <title th:text="#{home.title}">Home</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
@@ -11,39 +11,42 @@
 
 <div class="home-wrapper">
 
-  <h1>📚 Dobrodošli u online biblioteku!</h1>
+  <h1 th:text="#{home.welcome}">📚 Dobrodošli u online biblioteku!</h1>
 
+  <!-- Info o ulogovanom korisniku -->
   <p class="user-info"
      th:if="${username != null}"
-     th:text="'Ulogovani ste kao: ' + ${username}">
+     th:text="#{home.loggedInAs} + ' ' + ${username}">
   </p>
 
   <p class="user-info warning"
-     th:if="${username == null}">
+     th:if="${username == null}"
+     th:text="#{home.notLoggedIn}">
     Niste ulogovani
   </p>
 
+  <!-- Dugmad za korisnike -->
   <div class="home-actions">
     <a th:href="@{/books}">
-      <button class="primary-btn">Sve knjige</button>
+      <button class="primary-btn" th:text="#{home.allBooks}">Sve knjige</button>
     </a>
 
     <a th:href="@{/loans/active}">
-      <button class="secondary-btn">Moje pozajmice</button>
+      <button class="secondary-btn" th:text="#{home.myLoans}">Moje pozajmice</button>
     </a>
   </div>
 
+  <!-- Dugmad za admina -->
+  <div class="admin-actions" th:if="${isAdmin}">
+    <a th:href="@{/users}">
+      <button class="secondary-btn" th:text="#{home.allUsers}">Svi korisnici</button>
+    </a>
+    <a th:href="@{/loans/all}">
+      <button class="primary-btn" th:text="#{home.allLoans}">Sve pozajmice</button>
+    </a>
+  </div>
 
-<div class="admin-actions" th:if="${isAdmin}">
-  <a th:href="@{/users}">
-    <button class="secondary-btn">Svi korisnici</button>
-  </a>
-  <a th:href="@{/loans/all}">
-    <button class="primary-btn">Sve pozajmice</button>
-  </a>
-</div>
 </div>
 
 </body>
 </html>
-

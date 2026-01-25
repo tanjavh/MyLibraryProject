@@ -1,47 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Kreiraj knjigu</title>
+  <title th:text="#{book.create.title}">Create book</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+
 <div th:replace="fragments/nav :: nav"></div>
 
 <div class="form-wrapper">
-  <h1>Dodaj novu knjigu</h1>
+  <h1 th:text="#{book.create.heading}">Add new book</h1>
 
   <form th:action="@{/books/create}" th:object="${book}" method="post">
+
     <div>
-      <label for="title">Naslov:</label>
+      <label for="title" th:text="#{book.field.title}">Title:</label>
       <input type="text" id="title" th:field="*{title}" required/>
     </div>
 
     <div>
-      <label for="author">Autor:</label>
+      <label for="author" th:text="#{book.field.author}">Author:</label>
       <input type="text" id="author" th:field="*{newAuthorName}" required/>
     </div>
 
     <div>
-      <label>Opis:</label>
+      <label th:text="#{book.field.description}">Description:</label>
       <textarea th:field="*{description}" rows="4"></textarea>
     </div>
 
     <div>
-      <label>Kategorija:</label>
+      <label th:text="#{book.field.category}">Category:</label>
       <select th:field="*{category}" required>
-        <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"></option>
+        <option th:each="c : ${categories}"
+                th:value="${c}"
+                th:text="#{'category.' + ${c}}"></option>
       </select>
     </div>
 
     <div>
-      <label>Godina izdavanja:</label>
-      <input type="number" th:field="*{year}" min="1000" max="2100" required/>
+      <label th:text="#{book.field.year}">Year:</label>
+      <input type="number"
+             th:field="*{year}"
+             min="1000"
+             max="2100"
+             required/>
     </div>
 
-    <button type="submit" class="primary-btn">Kreiraj knjigu</button>
+    <button type="submit"
+            class="primary-btn"
+            th:text="#{book.create.submit}">
+      Create book
+    </button>
   </form>
 
-  <a th:href="@{/books}" style="display:block; margin-top:20px; text-align:center;">Nazad na sve knjige</a>
+  <a th:href="@{/books}"
+     style="display:block; margin-top:20px; text-align:center;"
+     th:text="#{book.create.back}">
+    Back to books
+  </a>
 </div>
 
 </body>

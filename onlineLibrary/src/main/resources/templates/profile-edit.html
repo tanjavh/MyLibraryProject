@@ -1,23 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Izmena korisničkog imena</title>
+  <title th:text="#{profile.edit.title}">Izmena korisničkog imena</title>
 </head>
 <body>
-<h1>Izmeni username</h1>
 
-<<form th:action="@{/users/profile/edit}" method="post">
+<h1 th:text="#{profile.edit.heading}">Izmeni korisničko ime</h1>
 
-  <label>Trenutno korisničko ime: <span th:text="${currentUsername}"></span></label><br>
+<form th:action="@{/users/profile/edit}" method="post">
+
+  <label>
+    <span th:text="#{profile.edit.current}">Trenutno korisničko ime:</span>
+    <span th:text="${currentUsername}"></span>
+  </label>
+  <br>
+
   <input type="hidden"
          th:name="${_csrf.parameterName}"
          th:value="${_csrf.token}" />
-  <label>Novi username: <input type="text" name="newUsername" required></label><br>
-  <button type="submit">Sačuvaj</button>
+
+  <label>
+    <span th:text="#{profile.edit.new}">Novi username:</span>
+    <input type="text" name="newUsername" required>
+  </label>
+  <br>
+
+  <button type="submit" th:text="#{profile.edit.save}">
+    Sačuvaj
+  </button>
 </form>
 
-<div th:if="${error}" style="color:red;" th:text="${error}"></div>
+<div th:if="${error}"
+     style="color:red;"
+     th:text="${error}">
+</div>
 
-<a th:href="@{/books}">Nazad</a>
+<a th:href="@{/books}" th:text="#{profile.edit.back}">
+  Nazad
+</a>
+<!-- Izbor jezika -->
+<div class="language-selector" style="margin-top: 20px;">
+  <a th:href="@{?lang=sr}">🇷🇸 SR</a> |
+  <a th:href="@{?lang=en}">🇬🇧 EN</a>
+</div>
+
 </body>
 </html>
