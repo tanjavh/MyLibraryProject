@@ -11,7 +11,11 @@
 <div th:replace="fragments/nav :: nav"></div>
 
 <h1 th:text="#{login.heading}">Login</h1>
-
+<p th:if="${param.usernameChanged}" style="color: green;">
+    <span th:text="#{login.username.changed}">
+        Izmenili ste korisničko ime. Molimo Vas da se ponovo ulogujete.
+    </span>
+</p>
 <div class="auth-container">
   <form th:action="@{/users/login}" method="post">
 

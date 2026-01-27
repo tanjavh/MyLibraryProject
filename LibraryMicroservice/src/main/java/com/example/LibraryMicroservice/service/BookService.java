@@ -7,11 +7,14 @@ import com.example.LibraryMicroservice.model.dto.BookInfoResponse;
 import com.example.LibraryMicroservice.model.entity.Author;
 import com.example.LibraryMicroservice.model.entity.Book;
 import com.example.LibraryMicroservice.model.entity.Category;
+import com.example.LibraryMicroservice.repository.AuthorRepository;
 import com.example.LibraryMicroservice.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -26,6 +29,7 @@ public class BookService {
     private final AuthorService authorService;
     private final CategoryService categoryService;
     private final ModelMapper modelMapper;
+    private final AuthorRepository authorRepository;
 
     // Dohvata sve knjige
     public List<Book> findAll() {
@@ -48,24 +52,46 @@ public class BookService {
     }
 
     // Brisanje knjige po ID-ju
-    public void deleteById(Long id) {
-        if (!bookRepository.existsById(id)) {
-            throw new RuntimeException("Book not found");
+    @Transactional
+    public void deleteById(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        Author author = book.getAuthor();
+
+        bookRepository.delete(book);
+
+        // flush da bi se FK oslobodio
+        bookRepository.flush();
+
+        // ako autor više nema knjiga → briši ga
+        if (author.getBooks().isEmpty()) {
+            authorRepository.delete(author);
         }
-        bookRepository.deleteById(id);
     }
 
+
+    @Transactional
     public Book createFromDto(BookCreateDto dto) {
 
         Author author;
 
         if (dto.getNewAuthorName() != null && !dto.getNewAuthorName().isBlank()) {
-            author = new Author();
-            author.setName(dto.getNewAuthorName());
-            author = authorService.save(author);
+
+            String authorName = dto.getNewAuthorName().trim();
+
+            author = authorService.findByName(authorName)
+                    .orElseGet(() -> {
+                        Author newAuthor = new Author();
+                        newAuthor.setName(authorName);
+                        return authorService.save(newAuthor);
+                    });
+
         } else if (dto.getAuthorId() != null) {
+
             author = authorService.findById(dto.getAuthorId())
-                    .orElseThrow(() -> new RuntimeException("Izabrani autor ne postoji!"));
+                    .orElseThrow(() -> new RuntimeException("Autor ne postoji!"));
+
         } else {
             throw new RuntimeException("Morate uneti autora!");
         }
@@ -73,19 +99,16 @@ public class BookService {
         Category category = categoryService.findByName(dto.getCategory())
                 .orElseGet(() -> categoryService.save(new Category(dto.getCategory())));
 
-        // ✅ ModelMapper radi samo mapiranje
+        // ⚠️ ModelMapper koristi se samo za prosta polja
         Book book = modelMapper.map(dto, Book.class);
 
-        // relacije se postavljaju ručno
+        // relacije ručno
         book.setAuthor(author);
         book.setCategory(category);
-
-        // dostupnost je poslovno pravilo mikroservisa
         book.setAvailable(true);
 
         return bookRepository.save(book);
     }
-
     public BookInfoResponse toBookInfo(Book book) {
         return BookInfoResponse.builder()
                 .id(book.getId())

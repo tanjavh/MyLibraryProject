@@ -1,6 +1,7 @@
 package com.example.onlineLibrary.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ public class Loan {
     private Long bookId;
 
     @Column(name = "book_title", nullable = false)
+    @Size(max=30)
     private String bookTitle;
 
     @Column(name = "loan_date", nullable = false)

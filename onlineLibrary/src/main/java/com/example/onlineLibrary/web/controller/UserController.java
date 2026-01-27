@@ -7,6 +7,9 @@ import com.example.onlineLibrary.model.enums.RoleName;
 import com.example.onlineLibrary.repository.UserRepository;
 import com.example.onlineLibrary.service.RoleService;
 import com.example.onlineLibrary.service.UserService;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -168,17 +171,26 @@ public class UserController {
     }
 
     @PostMapping("/profile/edit")
-    public String updateUsername(@RequestParam String newUsername, Principal principal, Model model) {
-        User currentUser = userService.getCurrentUser();
+    public String updateUsername(@RequestParam String newUsername,
+                                 Principal principal,
+                                 HttpServletRequest request,
+                                 Model model) {
+
         try {
-            userService.updateUserUsername(currentUser.getUsername(), newUsername);
-            return "redirect:/books"; // ili neka druga stranica
-        } catch (RuntimeException e) {
+            userService.updateUserUsername(principal.getName(), newUsername);
+
+            // 🔥 obavezno logout da ne ostane stari username u SecurityContext-u
+            request.logout();
+
+            return "redirect:/users/login?usernameChanged";
+
+        } catch (RuntimeException | ServletException e) {
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("currentUsername", currentUser.getUsername());
+            model.addAttribute("currentUsername", principal.getName());
             return "profile-edit";
         }
     }
+
 
 
 

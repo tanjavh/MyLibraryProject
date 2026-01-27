@@ -1,6 +1,8 @@
 package com.example.onlineLibrary.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
@@ -23,9 +25,11 @@ public class User {
     private String username;
 
     @Column(nullable = false, unique = true)
+    @Email
     private String email;
 
     @Column(nullable = false)
+    @Size(min=6)
     private String password;
 
     private boolean active = true; // automatski aktivan
