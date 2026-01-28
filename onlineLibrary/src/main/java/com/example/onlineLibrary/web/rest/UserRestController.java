@@ -18,7 +18,7 @@ public class UserRestController {
 
     private final UserService userService;
 
-    // GET /api/users/by-username/{username}
+
     @GetMapping("/by-username/{username}")
     public UserRegisterDto getByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username)

@@ -111,7 +111,7 @@ class UserServiceTest {
 
         UserViewDto dto = dtos.get(0);
         assertThat(dto.getUsername()).isEqualTo("testuser");
-        assertThat(dto.getRole()).isEqualTo("korisnik"); // mapirano na srpski
+        assertThat(dto.getRole()).isEqualTo("user");
         assertThat(dto.isHasActiveLoans()).isFalse();
     }
 

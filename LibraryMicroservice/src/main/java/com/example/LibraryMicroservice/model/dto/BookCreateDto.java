@@ -9,17 +9,23 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookCreateDto {
+
     @NotBlank
     @Size(max = 30)
     private String title;
+
     private Long authorId;
+
     @NotBlank
     @Size(max = 30)
     private String newAuthorName;
-    // ime autora iz forme
-    private String description;   // opis knjige
+
+    private String description;
+
     private CategoryName category;
+
     private Integer year;
-    private boolean available = true; // default true
+
+    private boolean available = true;
 
 }

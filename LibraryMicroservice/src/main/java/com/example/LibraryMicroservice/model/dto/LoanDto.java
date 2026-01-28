@@ -9,9 +9,9 @@ public class LoanDto {
 
     private Long loanId;
     private Long bookId;
-    private String bookTitle;    // opcionalno, može biti "Unknown" ako nema
-    private String bookAuthor;   // opcionalno
-    private String bookCategory; // opcionalno
+    private String bookTitle;
+    private String bookAuthor;
+    private String bookCategory;
     private LocalDate loanDate;
     private LocalDate returnDate;
     private boolean returned;

@@ -93,7 +93,7 @@ public class LoanController {
         try {
             loanService.returnLoan(loanId, authentication.getName());
         } catch (RuntimeException e) {
-            // Opcionalno: možeš proslediti poruku kao flash atribut i prikazati u view
+
             System.out.println("Greška: " + e.getMessage());
         }
 

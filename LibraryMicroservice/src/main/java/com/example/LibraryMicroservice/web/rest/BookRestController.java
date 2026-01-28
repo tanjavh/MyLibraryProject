@@ -19,7 +19,7 @@ public class BookRestController {
     private final RestTemplate restTemplate;
     private final String loanServiceUrl = "http://localhost:8082/api/loans"; // OnlineLibrary
 
-    // Pozajmi knjigu
+
     @PostMapping("/{bookId}/borrow/{userId}")
     public ResponseEntity<String> borrowBook(@PathVariable Long bookId,
                                              @PathVariable Long userId) {
@@ -35,7 +35,7 @@ public class BookRestController {
         }
     }
 
-    // Vrati knjigu
+
     @PostMapping("/{bookId}/return/{loanId}")
     public ResponseEntity<String> returnBook(@PathVariable Long bookId,
                                              @PathVariable Long loanId) {

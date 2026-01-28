@@ -1,7 +1,5 @@
 package com.example.LibraryMicroservice.service;
 
-
-
 import com.example.LibraryMicroservice.model.dto.BookCreateDto;
 import com.example.LibraryMicroservice.model.dto.BookInfoResponse;
 import com.example.LibraryMicroservice.model.entity.Author;
@@ -11,13 +9,10 @@ import com.example.LibraryMicroservice.repository.AuthorRepository;
 import com.example.LibraryMicroservice.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-
 import java.util.List;
 import java.util.Optional;
 
@@ -31,27 +26,27 @@ public class BookService {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
 
-    // Dohvata sve knjige
+
     public List<Book> findAll() {
         return bookRepository.findAll();
     }
 
-    // Dohvata knjigu po ID-ju
+
     public Optional<Book> findById(Long id) {
         return bookRepository.findById(id);
     }
 
-    // Čuvanje knjige
+
     public Book save(Book book) {
         return bookRepository.save(book);
     }
 
-    // Brisanje knjige po objektu
+
     public void delete(Book book) {
         bookRepository.delete(book);
     }
 
-    // Brisanje knjige po ID-ju
+
     @Transactional
     public void deleteById(Long bookId) {
         Book book = bookRepository.findById(bookId)
@@ -61,10 +56,8 @@ public class BookService {
 
         bookRepository.delete(book);
 
-        // flush da bi se FK oslobodio
         bookRepository.flush();
 
-        // ako autor više nema knjiga → briši ga
         if (author.getBooks().isEmpty()) {
             authorRepository.delete(author);
         }
@@ -109,6 +102,7 @@ public class BookService {
 
         return bookRepository.save(book);
     }
+
     public BookInfoResponse toBookInfo(Book book) {
         return BookInfoResponse.builder()
                 .id(book.getId())

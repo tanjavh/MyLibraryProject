@@ -15,7 +15,7 @@ public class BookViewDto {
     private String description;
     private CategoryName category;
     private int year;
-    private boolean available;       // true ako nije pozajmljena
-    private boolean hasActiveLoans;  // true ako postoji neka aktivna pozajmica
+    private boolean available;
+    private boolean hasActiveLoans;
 }
 

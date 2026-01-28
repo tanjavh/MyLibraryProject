@@ -46,7 +46,7 @@ class LoanServiceIntegrationTest {
         testUser = User.builder()
                 .username("integrationUser")
                 .email("integration@example.com")
-                .password("pass")
+                .password("password123")
                 .active(true)
                 .blocked(false)
                 .build();
