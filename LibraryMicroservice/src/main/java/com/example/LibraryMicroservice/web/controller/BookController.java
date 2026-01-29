@@ -4,7 +4,6 @@ import com.example.LibraryMicroservice.model.dto.BookCreateDto;
 import com.example.LibraryMicroservice.model.enums.CategoryName;
 import com.example.LibraryMicroservice.service.AuthorService;
 import com.example.LibraryMicroservice.service.BookService;
-import com.example.LibraryMicroservice.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

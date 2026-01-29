@@ -1,6 +1,7 @@
 package com.example.LibraryMicroservice.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class Author {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @Size(max=30)
     private String name;
 
     @OneToMany(mappedBy = "author")

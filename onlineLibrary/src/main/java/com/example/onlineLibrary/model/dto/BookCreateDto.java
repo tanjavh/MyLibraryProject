@@ -9,14 +9,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookCreateDto {
-    @NotBlank
-    @Size(max = 30)
+
+    @NotBlank(message= "{NotBlank.book.title.notBlank}")
+    @Size(max = 30, message = "{Size.book.title.size}")
     private String title;
+
     private Long authorId;
-    @NotBlank
-    @Size(max = 30)
+
+    @NotBlank(message = "{NotBlank.book.author.notBlank}")
+    @Size(max = 30, message = "{Size.book.author.size}")
     private String newAuthorName;
-    // ime autora iz forme
+
+
+
     private String description;   // opis knjige
     private CategoryName category;
     private Integer year;

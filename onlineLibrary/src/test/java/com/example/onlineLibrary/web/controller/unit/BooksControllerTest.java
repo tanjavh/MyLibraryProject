@@ -38,11 +38,12 @@ class BooksControllerTest {
         mockMvc.perform(post("/books/create")
                         .with(csrf())
                         .param("title", "Test Book")
-                        .param("author", "Test Author")
+                        .param("newAuthorName", "Test Author")
                         .param("category", "FICTION")
-                )
+                        .param("year", "2020"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
+
 
         // Provera da li je restTemplate pozvan
         verify(restTemplate).postForObject(anyString(), any(), eq(Void.class));

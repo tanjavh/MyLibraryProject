@@ -15,12 +15,22 @@
 
     <div>
       <label for="title" th:text="#{book.field.title}">Title:</label>
-      <input type="text" id="title" th:field="*{title}" required/>
+      <input type="text" id="title" th:field="*{title}" class="form-control"
+             th:errorclass="is-invalid"/>
+      <div class="invalid-feedback"
+           th:if="${#fields.hasErrors('title')}"
+           th:errors="*{title}">
+      </div>
     </div>
 
     <div>
       <label for="author" th:text="#{book.field.author}">Author:</label>
-      <input type="text" id="author" th:field="*{newAuthorName}" required/>
+      <input type="text" id="author" th:field="*{newAuthorName}" class="form-control"
+             th:errorclass="is-invalid"/>
+      <div class="invalid-feedback"
+           th:if="${#fields.hasErrors('newAuthorName')}"
+           th:errors="*{newAuthorName}">
+      </div>
     </div>
 
     <div>

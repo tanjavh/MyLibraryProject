@@ -7,6 +7,7 @@ import com.example.onlineLibrary.model.enums.CategoryName;
 
 import com.example.onlineLibrary.service.LoanService;
 import com.example.onlineLibrary.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -92,10 +93,20 @@ public class BookController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public String createBook(@ModelAttribute("book") BookCreateDto dto) {
+    public String createBook(
+            @Valid @ModelAttribute("book") BookCreateDto dto,
+            org.springframework.validation.BindingResult bindingResult,
+            Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", CategoryName.values());
+            return "books-create"; // vrati istu formu
+        }
+
         restTemplate.postForObject(libraryUrl, dto, Void.class);
         return "redirect:/books";
     }
+
 
     // ==============================
     // Brisanje knjige (ADMIN) samo ako nije pozajmljena

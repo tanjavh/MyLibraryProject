@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +32,9 @@ public class BookService {
     }
 
 
-    public Optional<Book> findById(Long id) {
-        return bookRepository.findById(id);
-    }
+//    public Optional<Book> findById(Long id) {
+//        return bookRepository.findById(id);
+//    }
 
 
     public Book save(Book book) {
@@ -50,7 +50,7 @@ public class BookService {
     @Transactional
     public void deleteById(Long bookId) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new RuntimeException("Knjiga nije pronađena"));
 
         Author author = book.getAuthor();
 
@@ -116,7 +116,7 @@ public class BookService {
 
     public void updateAvailability(Long bookId, boolean available) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new RuntimeException("Knjiga nije pronađena"));
         book.setAvailable(available);
         bookRepository.save(book);
     }
@@ -126,7 +126,7 @@ public class BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Book not found"
+                        "Knjiga nije pronađena"
                 ));
 
         return BookInfoResponse.builder()

@@ -1,6 +1,5 @@
 package com.example.LibraryMicroservice.service;
 
-
 import com.example.LibraryMicroservice.model.entity.Author;
 import com.example.LibraryMicroservice.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class AuthorService {
 
     public Author save(Author author) {
         if (author.getName() == null || author.getName().isBlank()) {
-            throw new RuntimeException("Author name cannot be empty!");
+            throw new RuntimeException("Ime autora ne može biti prazan string!");
         }
         return authorRepository.save(author);
     }

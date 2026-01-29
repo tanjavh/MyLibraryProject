@@ -31,7 +31,7 @@ public class Book {
     @ManyToOne(optional = false)
     private Category category;
 
-    @Column(/*name = "publish_year",*/ nullable = false)
+    @Column(nullable = false)
     private int year;
 
     @Column(nullable = false)

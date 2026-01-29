@@ -3,6 +3,7 @@ package com.example.LibraryMicroservice.web.rest;
 import com.example.LibraryMicroservice.model.dto.BookCreateDto;
 import com.example.LibraryMicroservice.model.dto.BookInfoResponse;
 import com.example.LibraryMicroservice.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +34,8 @@ public class BookRestController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Greška: " + e.getMessage());
         }
-    }
 
+    }
 
     @PostMapping("/{bookId}/return/{loanId}")
     public ResponseEntity<String> returnBook(@PathVariable Long bookId,
