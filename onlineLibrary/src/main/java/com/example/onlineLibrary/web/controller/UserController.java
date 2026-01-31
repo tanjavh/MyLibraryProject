@@ -134,16 +134,14 @@ public class UserController {
         if (userRepository.existsByEmail(dto.getEmail())) {
             bindingResult.rejectValue(
                     "email",
-                    "email.exists",
-                    "Email je već u upotrebi"
+                    "email.exists"
             );
         }
 
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             bindingResult.rejectValue(
                     "confirmPassword",
-                    "password.mismatch",
-                    "Lozinke se ne poklapaju"
+                    "password.mismatch"
             );
         }
 

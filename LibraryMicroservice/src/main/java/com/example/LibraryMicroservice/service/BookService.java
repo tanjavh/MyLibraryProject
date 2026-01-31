@@ -7,6 +7,7 @@ import com.example.LibraryMicroservice.model.entity.Book;
 import com.example.LibraryMicroservice.model.entity.Category;
 import com.example.LibraryMicroservice.repository.AuthorRepository;
 import com.example.LibraryMicroservice.repository.BookRepository;
+import com.example.LibraryMicroservice.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class BookService {
     private final CategoryService categoryService;
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
+    private final CategoryRepository categoryRepository;
 
 
     public List<Book> findAll() {
@@ -102,6 +104,32 @@ public class BookService {
 
         return bookRepository.save(book);
     }
+    private Author resolveAuthor(BookCreateDto dto) {
+
+        // 1️⃣ Ako NI autorId NI novo ime nisu poslati → greška
+        if (dto.getAuthorId() == null &&
+                (dto.getNewAuthorName() == null || dto.getNewAuthorName().isBlank())) {
+
+            throw new IllegalArgumentException("Author is required");
+        }
+
+        // 2️⃣ Ako postoji authorId → koristi postojećeg autora
+        if (dto.getAuthorId() != null) {
+            return authorRepository.findById(dto.getAuthorId())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("Author not found with id " + dto.getAuthorId())
+                    );
+        }
+
+        // 3️⃣ Inače → koristi ili kreiraj autora po imenu
+        String authorName = dto.getNewAuthorName().trim();
+
+        return authorRepository.findByName(authorName)
+                .orElseGet(() -> authorRepository.save(
+                        new Author(authorName)
+                ));
+    }
+
 
     public BookInfoResponse toBookInfo(Book book) {
         return BookInfoResponse.builder()

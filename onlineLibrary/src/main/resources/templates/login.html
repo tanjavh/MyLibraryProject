@@ -23,13 +23,14 @@
       <label th:text="#{login.username}">Username:</label>
       <input type="text" name="username" required
              th:placeholder="#{login.username.placeholder}" placeholder="Korisničko ime"/>
+
     </div>
 
     <div>
       <label th:text="#{login.password}">Password:</label>
       <input type="password" name="password" required
              th:placeholder="#{login.password.placeholder}" placeholder="Lozinka"/>
-      <p th:if="${param.error}" class="text-danger" th:text="#{login.error}">
+      <p th:if="${param.error}" class="text-danger" th:text="#{login.password.error}">
         Pogrešno korisničko ime ili lozinka
       </p>
     </div>

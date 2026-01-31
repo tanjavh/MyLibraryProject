@@ -7,6 +7,9 @@
 <body>
 
 <div th:replace="fragments/nav :: nav"></div>
+<div th:if="${errorMessage}" class="error-box">
+  <p th:text="${errorMessage}"></p>
+</div>
 
 <div class="form-wrapper">
   <h1 th:text="#{book.create.heading}">Add new book</h1>
@@ -38,22 +41,32 @@
       <textarea th:field="*{description}" rows="4"></textarea>
     </div>
 
-    <div>
-      <label th:text="#{book.field.category}">Category:</label>
-      <select th:field="*{category}" required>
-        <option th:each="c : ${categories}"
-                th:value="${c}"
-                th:text="#{'category.' + ${c}}"></option>
-      </select>
+    <select th:field="*{category}" required>
+      <option value="" disabled selected>-- Izaberite kategoriju --</option>
+
+      <option th:each="c : ${categories}"
+              th:value="${c}"
+              th:text="#{'category.' + ${c}}">
+      </option>
+    </select>
+    <div class="invalid-feedback"
+         th:if="${#fields.hasErrors('category')}"
+         th:errors="*{category}">
     </div>
 
     <div>
-      <label th:text="#{book.field.year}">Publish year:</label>
+      <label for="year" th:text="#{book.field.year}">Publish year:</label>
       <input type="number"
+             id="year"
              th:field="*{year}"
              min="1000"
              max="2100"
-             required/>
+             class="form-control"
+             th:errorclass="is-invalid"/>
+      <div class="invalid-feedback"
+           th:if="${#fields.hasErrors('year')}"
+           th:errors="*{year}">
+      </div>
     </div>
 
     <button type="submit"

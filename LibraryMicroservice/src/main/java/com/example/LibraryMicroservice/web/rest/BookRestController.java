@@ -5,6 +5,7 @@ import com.example.LibraryMicroservice.model.dto.BookInfoResponse;
 import com.example.LibraryMicroservice.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -53,9 +54,11 @@ public class BookRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createBook(@RequestBody BookCreateDto dto) {
+    public ResponseEntity<Void> createBook(
+            @Valid @RequestBody BookCreateDto dto) {
+
         bookService.createFromDto(dto);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {

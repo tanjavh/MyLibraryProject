@@ -2,6 +2,7 @@ package com.example.onlineLibrary.model.dto;
 
 import com.example.onlineLibrary.model.enums.CategoryName;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,14 @@ public class BookCreateDto {
 
 
 
-    private String description;   // opis knjige
+    private String description;// opis knjige
+
+    @NotNull(message = "{book.category.required}")
     private CategoryName category;
+
+    @NotNull(message = "{book.year.required}")
     private Integer year;
+
     private boolean available = true; // default true
 
 }

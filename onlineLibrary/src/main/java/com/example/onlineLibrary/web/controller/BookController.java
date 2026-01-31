@@ -13,7 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -91,19 +93,28 @@ public class BookController {
         return "books-create";
     }
 
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public String createBook(
             @Valid @ModelAttribute("book") BookCreateDto dto,
-            org.springframework.validation.BindingResult bindingResult,
+            BindingResult bindingResult,
             Model model) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", CategoryName.values());
-            return "books-create"; // vrati istu formu
+            return "books-create";
         }
 
-        restTemplate.postForObject(libraryUrl, dto, Void.class);
+        try {
+            restTemplate.postForObject(libraryUrl, dto, Void.class);
+        } catch (Exception ex) {
+            // ⬇️ poruka za UI, ne stack trace
+            model.addAttribute("categories", CategoryName.values());
+            model.addAttribute("errorMessage", "Knjiga nije sačuvana. Proverite podatke.");
+            return "books-create";
+        }
+
         return "redirect:/books";
     }
 

@@ -3,10 +3,7 @@ package com.example.onlineLibrary.model.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
@@ -14,23 +11,27 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class UserRegisterDto {
 
     private Long id;
 
-    @NotBlank(message = "Username je obavezan")
+    @NotBlank(message = "{NotBlank.user.username}")
+    @Size(min = 3, max = 20, message = "{Size.user.username}")
     private String username;
 
-    @NotBlank(message = "Email je obavezan")
-    @Email(message = "Email mora biti validan")
+    @NotBlank(message = "{NotBlank.user.email}")
+    @Email(message = "{Email.user.email}")
     private String email;
 
-    @NotBlank(message = "Lozinka je obavezna")
-    @Size(min = 6, message = "Lozinka mora imati bar 6 karaktera")
+    @NotBlank(message = "{NotBlank.user.password}")
+    @Size(min = 6, message = "{Size.user.password}")
     private String password;
 
-    @NotBlank(message = "Potvrda lozinke je obavezna")
+    @NotBlank(message = "{NotBlank.user.confirmPassword}")
     private String confirmPassword;
+
 
     private boolean active;
     private boolean blocked;
