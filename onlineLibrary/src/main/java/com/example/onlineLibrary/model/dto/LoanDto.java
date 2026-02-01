@@ -32,4 +32,5 @@ public class LoanDto {
     private Long userId;
     @NotBlank
     private String username;
+    private String overdueMessage;
 }

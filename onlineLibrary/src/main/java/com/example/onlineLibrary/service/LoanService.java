@@ -29,7 +29,9 @@ public class LoanService {
     // Konverzija Loan -> LoanDto
     // ==============================
     public LoanDto convertToDto(Loan loan) {
+
         LoanDto dto = new LoanDto();
+
         dto.setLoanId(loan.getId());
         dto.setBookId(loan.getBookId());
         dto.setBookTitle(loan.getBookTitle());
@@ -37,12 +39,28 @@ public class LoanService {
         dto.setLoanDate(loan.getLoanDate());
         dto.setReturnDate(loan.getReturnDate());
 
-        // Overdue > 15 dana
-        if (!loan.isReturned()) {
-            dto.setOverdue(loan.getLoanDate().plusDays(15).isBefore(LocalDate.now()));
+        // ⏱️ Izračunavanje dana
+        long days =
+                java.time.temporal.ChronoUnit.DAYS.between(
+                        loan.getLoanDate(),
+                        LocalDate.now()
+                );
+
+        // ⚠️ Prekoračenje 15+ dana
+        if (!loan.isReturned() && days > 15) {
+            dto.setOverdue(true);
+            dto.setOverdueMessage("Rok za vraćanje je prekoračen (15+ dana)");
         }
 
-        // Dohvati dodatne informacije o knjizi iz LibraryMicroservice
+        // ⛔ Prekoračenje 30+ dana (samo PORUKA)
+        if (!loan.isReturned() && days > 30) {
+            dto.setOverdue(true);
+            dto.setOverdueMessage(
+                    "⚠️ Vaš nalog je blokiran zbog nevraćenih knjiga starijih od 30 dana."
+            );
+        }
+
+        // 📚 Dohvati podatke o knjizi iz LibraryMicroservice
         try {
             BookInfoResponse book = restTemplate.getForObject(
                     libraryBaseUrl + "/" + loan.getBookId(),
@@ -57,8 +75,8 @@ public class LoanService {
                 dto.setBookAuthor("N/A");
                 dto.setBookCategory(null);
             }
+
         } catch (Exception e) {
-            // REST nije dostupan, označavamo kao obrisano
             dto.setBookTitle(dto.getBookTitle() + " (obrisana)");
             dto.setBookAuthor("N/A");
             dto.setBookCategory(null);
@@ -66,7 +84,6 @@ public class LoanService {
 
         return dto;
     }
-
 
     @Transactional(readOnly = true)
     public List<LoanDto> getActiveLoansByUser(String username) {
@@ -262,6 +279,25 @@ public class LoanService {
     public int countActiveLoansByUsername(String username) {
         return loanRepository
                 .countByUser_UsernameAndReturnedFalse(username);
+    }
+    @Transactional
+    public void blockUsersWithLoansOlderThan30Days() {
+
+        LocalDate limit = LocalDate.now().minusDays(30);
+
+        List<Loan> overdueLoans =
+                loanRepository.findAll().stream()
+                        .filter(l -> !l.isReturned())
+                        .filter(l -> l.getLoanDate().isBefore(limit))
+                        .toList();
+
+        for (Loan loan : overdueLoans) {
+            User user = loan.getUser();
+            if (!user.isBlocked()) {
+                user.setBlocked(true);
+                userRepository.save(user);
+            }
+        }
     }
 
 }
