@@ -127,7 +127,8 @@ Fajlovi:
   
 - Rok za vraćanje knjige:
   - više od 15 dana → upozorenje
-  - više od 30 dana → korisnik se blokira
+  - više od 30 dana → korisnik se blokira.
+  - Schaduler je uključen svakog dana u isto vreme i proverava da li je neka pozajmica dostigla 15+, odnosno 30+ dana.
 - Blokirani korisnici:
   - ne mogu pozajmljivati nove knjige
   - mogu vratiti već pozajmljene knjige
