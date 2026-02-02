@@ -123,16 +123,28 @@ Fajlovi:
 
  7. Poslovna pravila
 
-✔ Implementirana sva pravila iz zadatka:
-
 - Maksimalno 3 aktivne pozajmice po korisniku
+  
 - Rok za vraćanje knjige:
   - više od 15 dana → upozorenje
   - više od 30 dana → korisnik se blokira
 - Blokirani korisnici:
   - ne mogu pozajmljivati nove knjige
   - mogu vratiti već pozajmljene knjige
+  - 
+- Admin ne može brisati knjigu koja je trenutno pozajmljena.
+ 
+- Admin ne može brisati korisnika koji ima bar jednu pozajmljenu knjigu.
+  
+- Admin ne može obrisati samog sebe.
+  
+- Ako se pokrene onlineLibrary bez prethodnog pokretanja LibraryMicroservice-a izlazi poruka da LibraryMicroservice trenutno nije dostupan.
+  
+- Ako je neka knjiga bila pozajmljena, pa vraćena, a zatim obrisana iz baze, njen naslov će se i dalje pojavljivati u listi 'Sve pozajmice', ali će pored njega posati '(obrisano)'.
+  Te knjige više neće biti u library_db bazi, ali će ostati u online_library bazi u tabeli 'loans'. U listingu 'Sve knjige', te knjige više neće biti.
 
+
+✔ Implementirani su svi zahtevi iz zadatka
 ---
 
     8. Testiranje
@@ -146,11 +158,12 @@ Testirani su:
 - REST endpoint-i
 - poslovna logika
 - security scenariji
-- granični slučajevi, koji se ne vide kod izvršavanja programa, pošto još nije prošlo dovoljno dana za njih(15+ i 30+ dana)
+- granični slučajevi, koji se ne vide kod izvršavanja programa, pošto još nije prošlo dovoljno dana za njih(15+ i 30+ dana od dana pozajmljivanja knjige)
+- testovi pokrivaju Line 73%.
 
 ---
 
- 9. Tehnologije
+ 9. Tehnologije korišćene pri izradi projekta:
 
 - Java 21
 - Spring Boot 3.x
@@ -159,17 +172,17 @@ Testirani su:
 - Thymeleaf
 - REST API
 - MariaDB
+- ModelMapper (u LibraryMicroservice -> BookService -> createFromDto()-samo za prosta polja, za relacije mapiranje je ručno.
 - H2 (test)
-- ModelMapper
 - JUnit 5 / Mockito
-
 ---
-
+ 
  Pokretanje aplikacije
 
 1.Pokrenuti LibraryMicroservice
 
-2. Pokrenuti  onlineLibrary
+2.Pokrenuti  onlineLibrary
+
 
   Zaključak
 
