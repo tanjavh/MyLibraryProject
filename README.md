@@ -88,7 +88,7 @@ REST endpoint-i:
 - CSRF zaštita uključena
 - Posebna konfiguracija za testove
 
-      LibraryMicroservice
+LibraryMicroservice
 - NEMA Spring Security
 - Dostupan samo kao interni REST servis
 
@@ -131,7 +131,7 @@ Fajlovi:
   - više od 30 dana → korisnik se blokira
 - Blokirani korisnici:
   - ne mogu pozajmljivati nove knjige
-- mogu vratiti već pozajmljene knjige
+  - mogu vratiti već pozajmljene knjige
 
 ---
 
@@ -146,7 +146,7 @@ Testirani su:
 - REST endpoint-i
 - poslovna logika
 - security scenariji
-- granični slučajevi (15+ i 30+ dana)
+- granični slučajevi, koji se ne vide kod izvršavanja programa, pošto još nije prošlo dovoljno dana za njih(15+ i 30+ dana)
 
 ---
 
@@ -167,7 +167,7 @@ Testirani su:
 
  Pokretanje aplikacije
 
- 1.Pokrenuti LibraryMicroservice
+1.Pokrenuti LibraryMicroservice
 
 2. Pokrenuti  onlineLibrary
 
