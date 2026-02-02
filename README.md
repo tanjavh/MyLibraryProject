@@ -64,7 +64,7 @@ REST Controller:
 ---
 
  LibraryMicroservice
-- 1 REST Controller**
+- 1 REST Controller
 
 REST endpoint-i:
 - `GET /api/books`
