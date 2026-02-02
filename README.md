@@ -48,8 +48,8 @@ Aplikacija koristi mikroservisnu arhitekturu:
 3. Controller-i (zahtev zadatka)
 
  onlineLibrary
-- 5 MVC Controller-a**
-- 1 REST Controller**
+- 5 MVC Controller-a
+- 1 REST Controller
 
 MVC Controller-i:
 - prikaz knjiga (BookController)
@@ -73,7 +73,7 @@ REST endpoint-i:
 - `DELETE /api/books/{id}`
 - `PUT /api/books/{id}/availability`
 
-✔ Ispunjen zahtev: **GET / POST / DELETE**
+✔ Ispunjen zahtev: GET / POST / DELETE
 
 ---
 
