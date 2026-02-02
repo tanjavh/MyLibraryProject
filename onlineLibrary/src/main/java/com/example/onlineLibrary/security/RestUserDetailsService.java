@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class RestUserDetailsService implements UserDetailsService {
 
     private final RestTemplate restTemplate; // Bean RestTemplate mora postojati
-    private final String userServiceUrl = "http://localhost:8080/api/users"; // URL UserService-a
+    private final String userServiceUrl = "http://localhost:8082/api/users"; // URL UserService-a
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

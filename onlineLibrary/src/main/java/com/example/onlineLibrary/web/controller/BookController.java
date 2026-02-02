@@ -127,7 +127,6 @@ public class BookController {
     public String deleteBook(@PathVariable Long id) {
         boolean hasActiveLoans = loanService.existsByBookIdAndReturnedFalse(id);
         if (hasActiveLoans) {
-            // možeš dodati flash atribut za poruku u view
             return "redirect:/books?error=activeLoan";
         }
 

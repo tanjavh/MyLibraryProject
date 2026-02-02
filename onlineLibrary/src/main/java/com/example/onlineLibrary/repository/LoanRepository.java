@@ -13,12 +13,6 @@ import java.util.Optional;
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 
-    // Sve pozajmice određenog korisnika
-    List<Loan> findByUser(User user);
-
-    // Provera da li korisnik trenutno ima aktivnu pozajmicu za određenu knjigu
-    Optional<Loan> findByUserAndBookIdAndReturnedFalse(User user, Long bookId);
-
 
     boolean existsByUserAndReturnedFalse(User user);
 
@@ -26,7 +20,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     Optional<Loan> findByBookIdAndUserUsernameAndReturnedFalse(Long bookId, String username);
 
-    List<Loan> findByUserUsernameAndReturnedFalse(String username);
 
     @Query("SELECT l FROM Loan l JOIN FETCH l.user WHERE l.user.username = :username AND l.returned = false")
     List<Loan> findActiveLoansByUsername(@Param("username") String username);

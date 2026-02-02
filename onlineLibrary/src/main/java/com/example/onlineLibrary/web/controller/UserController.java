@@ -91,10 +91,10 @@ public class UserController {
                              RedirectAttributes redirectAttributes,
                              Authentication authentication) {
 
-        // Ne dozvoli adminu da obriše samog sebe
+
         User currentUser = userService.findByUsername(authentication.getName())
                 .orElseThrow(() -> new IllegalStateException("Trenutni korisnik nije pronađen"));
-
+        // Ne dozvoli adminu da obriše samog sebe
         if (currentUser.getId().equals(id)) {
             redirectAttributes.addFlashAttribute("error", "Ne možete da obrišete samog sebe!");
             return "redirect:/users";
@@ -188,9 +188,4 @@ public class UserController {
             return "profile-edit";
         }
     }
-
-
-
-
-
 }

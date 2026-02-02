@@ -119,18 +119,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-//    private String mapRoleToSerbian(User user) {
-//        if (user.getRoles().isEmpty()) {
-//            return "N/A";
-//        }
-//
-//        RoleName roleName = user.getRoles().iterator().next().getName();
-//
-//        return switch (roleName) {
-//            case ADMIN -> "Admin";
-//            case USER -> "Korisnik";
-//        };
-//    }
+
     @Transactional
     public void updateUserUsername(String oldUsername, String newUsername) {
         User user = userRepository.findByUsername(oldUsername)
