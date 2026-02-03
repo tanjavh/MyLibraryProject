@@ -11,16 +11,23 @@ import lombok.*;
 @NoArgsConstructor // ovo omogućava new BookInfoResponse()
 @AllArgsConstructor
 public class BookInfoResponse {
+
     private Long id;
+
     @NotBlank
     @Size(max = 30)
     private String title;
+
     @NotBlank
     @Size(max = 30)
     private String authorName;
+
     private CategoryName category;
+
     private int year;
+
     private boolean available;
+
     private boolean hasActiveLoans; // za kontrolu dugmeta Obriši
 
 

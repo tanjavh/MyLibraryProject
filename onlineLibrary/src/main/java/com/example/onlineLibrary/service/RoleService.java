@@ -30,12 +30,12 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    // ==============================
-    // Dohvata role po ID-ju
-    // ==============================
-    public Optional<Role> findById(Long id) {
-        return roleRepository.findById(id);
-    }
+//    // ==============================
+//    // Dohvata role po ID-ju
+//    // ==============================
+//    public Optional<Role> findById(Long id) {
+//        return roleRepository.findById(id);
+//    }
 
     // ==============================
     // Dohvata role po imenu (enum)
@@ -44,12 +44,5 @@ public class RoleService {
         return roleRepository.findByName(name);
     }
 
-    // ==============================
-    // Brisanje role
-    // ==============================
-    public void delete(Role role) {
-        if (role != null) {
-            roleRepository.delete(role);
-        }
-    }
+
 }

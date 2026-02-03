@@ -74,9 +74,9 @@ public class LoanController {
         return "loans-create";
     }
 
-    // ==============================
-    // Kreiranje nove pozajmice (admin)
-    // ==============================
+//     ==============================
+//     Kreiranje nove pozajmice (admin)
+//     ==============================
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public String createLoan(@RequestParam Long userId, @RequestParam Long bookId) {

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
     // Dohvata korisnika po username-u (potrebno za Spring Security)
     Optional<User> findByUsername(String username);
 

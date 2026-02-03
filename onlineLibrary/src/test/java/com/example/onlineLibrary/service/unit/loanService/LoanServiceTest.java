@@ -25,7 +25,6 @@ class LoanServiceTest {
     private LoanRepository loanRepository;
 
 
-
     @Mock
     private RestTemplate restTemplate;
 

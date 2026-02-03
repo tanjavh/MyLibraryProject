@@ -21,7 +21,7 @@ public class BookCreateDto {
     @Size(max = 30)
     private String newAuthorName;
 
-    private String description;   // opis knjige
+    private String description;
 
     @NotNull
     private CategoryName category;

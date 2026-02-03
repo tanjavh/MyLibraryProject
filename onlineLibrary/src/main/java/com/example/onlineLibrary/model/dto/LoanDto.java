@@ -13,24 +13,36 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoanDto {
+
     private Long loanId;
+
     private Long bookId;
+
     @NotBlank
     @Size(max = 30)
     private String bookTitle;
+
     @NotBlank
     @Size(max = 30)
     private String bookAuthor;
+
     private CategoryName bookCategory;
+
     private LocalDate loanDate;
+
     private LocalDate dueDate;      // ➤ datum kada je knjiga trebala biti vraćena
+
     private LocalDate returnDate;
+
     private boolean returned;
+
     private boolean overdue;        // za upozorenje 15-30 dana
 
     // informacije o korisniku
     private Long userId;
+
     @NotBlank
     private String username;
+
     private String overdueMessage;
 }
