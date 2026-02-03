@@ -134,7 +134,7 @@ Fajlovi:
   - mogu vratiti već pozajmljene knjige
     
 - Admin ima dozvolu da briše knjige ili korisnike.
-- 
+ 
 - Admin ne može brisati knjigu koja je trenutno pozajmljena.
  
 - Admin ne može brisati korisnika koji ima bar jednu pozajmljenu knjigu.
@@ -146,13 +146,15 @@ Fajlovi:
 - Ako je neka knjiga bila pozajmljena, pa vraćena, a zatim obrisana iz baze, njen naslov će se i dalje pojavljivati u listi 'Sve pozajmice', ali će pored njega posati '(obrisano)'.
   Te knjige više neće biti u library_db bazi, ali će ostati u online_library bazi u tabeli 'loans'. U listingu 'Sve knjige', te knjige više neće biti.
 
+- I admin-u i običnom korisniku omogućena je promena korisničkog imena, preko forme.
+
 
 ✔ Implementirani su svi zahtevi iz zadatka
 ---
 
     8. Testiranje
 
-- JUnit testovi
+- Unit testovi
 - Integration testovi
 - Poseban `test` profil
 - Posebna Security konfiguracija za testove
@@ -161,7 +163,7 @@ Testirani su:
 - REST endpoint-i
 - poslovna logika
 - security scenariji
-- granični slučajevi, koji se ne vide kod izvršavanja programa, pošto još nije prošlo dovoljno dana za njih (npr. 15+ i 30+ dana od dana pozajmljivanja knjige)
+- granični slučajevi, koji se ne vide kod izvršavanja programa, pošto još nije prošlo dovoljno dana za njih, tj. program nije radio u kontinuitetu više od 15, odnosno od 30 dana (npr. 15+ i 30+ dana od dana pozajmljivanja knjige)
 - testovi pokrivaju Line 74% biznis logike.
 
 ---
