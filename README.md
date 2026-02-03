@@ -128,11 +128,13 @@ Fajlovi:
 - Rok za vraćanje knjige:
   - više od 15 dana → upozorenje
   - više od 30 dana → korisnik se blokira.
-  - Schaduler je uključen svakog dana u isto vreme i proverava da li je neka pozajmica dostigla 15+, odnosno 30+ dana.
+  - Scheduler je uključen svakog dana u isto vreme i proverava da li je neka pozajmica dostigla 15+, odnosno 30+ dana.
 - Blokirani korisnici:
   - ne mogu pozajmljivati nove knjige
   - mogu vratiti već pozajmljene knjige
-  - 
+    
+- Admin ima dozvolu da briše knjige ili korisnike.
+- 
 - Admin ne može brisati knjigu koja je trenutno pozajmljena.
  
 - Admin ne može brisati korisnika koji ima bar jednu pozajmljenu knjigu.
@@ -150,7 +152,7 @@ Fajlovi:
 
     8. Testiranje
 
-- Unit testovi
+- JUnit testovi
 - Integration testovi
 - Poseban `test` profil
 - Posebna Security konfiguracija za testove
@@ -159,8 +161,8 @@ Testirani su:
 - REST endpoint-i
 - poslovna logika
 - security scenariji
-- granični slučajevi, koji se ne vide kod izvršavanja programa, pošto još nije prošlo dovoljno dana za njih(15+ i 30+ dana od dana pozajmljivanja knjige)
-- testovi pokrivaju Line 73%.
+- granični slučajevi, koji se ne vide kod izvršavanja programa, pošto još nije prošlo dovoljno dana za njih (npr. 15+ i 30+ dana od dana pozajmljivanja knjige)
+- testovi pokrivaju Line 74% biznis logike.
 
 ---
 
@@ -180,9 +182,9 @@ Testirani su:
  
  Pokretanje aplikacije
 
-1.Pokrenuti LibraryMicroservice
+1.Pokrenuti LibraryMicroservice na portu 8081
 
-2.Pokrenuti  onlineLibrary
+2.Pokrenuti  onlineLibrary na portu 8082
 
 
   Zaključak
