@@ -133,7 +133,7 @@ Fajlovi:
   - ne mogu pozajmljivati nove knjige
   - mogu vratiti već pozajmljene knjige
     
-- Admin ima dozvolu da briše knjige ili korisnike.
+- Admin ima dozvolu da briše knjige ili korisnike koji nisu imali pozajmice.
  
 - Admin ne može brisati knjigu koja je trenutno pozajmljena.
  
