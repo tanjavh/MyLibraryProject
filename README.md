@@ -54,7 +54,7 @@ Aplikacija koristi mikroservisnu arhitekturu:
 MVC Controller-i:
 - prikaz knjiga (BookController)
 - početna(Index) i glavna(Home) stranica(HomeController)
-- upravljanje pozajmicama-pozajmljivanje I vraćanje knjiga (LoanController)
+- upravljanje pozajmicama-pozajmljivanje i vraćanje knjiga (LoanController)
 - upravljanje ulogama ADMIN I USER (RoleController)
 - login,  register, administracija, izmena korisničkog imena(UserController)
 
