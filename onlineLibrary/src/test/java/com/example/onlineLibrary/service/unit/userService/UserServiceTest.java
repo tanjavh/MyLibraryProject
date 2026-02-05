@@ -141,5 +141,16 @@ class UserServiceTest {
                 User.builder().username("u2").email("dup@example.com").password("pass").build()
         ));
     }
-}
+    @Test
+    void testDeleteUser_withPreviousLoans_throws() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(loanRepository.existsByUserAndReturnedFalse(user)).thenReturn(false);
+        when(loanRepository.existsByUser(user)).thenReturn(true);
 
+        Exception ex = assertThrows(IllegalStateException.class,
+                () -> userService.deleteUser(1L));
+
+        assertThat(ex.getMessage())
+                .isEqualTo("Korisnik je imao pozajmice i ne može biti obrisan");
+    }
+}

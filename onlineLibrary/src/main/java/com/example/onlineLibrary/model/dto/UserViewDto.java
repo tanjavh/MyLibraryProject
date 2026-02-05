@@ -28,5 +28,7 @@ public class UserViewDto {
 
     private boolean blocked;
 
+    private boolean hadLoans;
+
     private boolean hasActiveLoans; // true ako korisnik ima aktivne pozajmice
 }

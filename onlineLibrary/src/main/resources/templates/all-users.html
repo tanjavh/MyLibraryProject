@@ -30,19 +30,24 @@
       <td th:text="${user.active}">Da li je aktivan korisnik</td>
       <td>
         <!-- Dugme Obriši samo ako korisnik nema aktivne pozajmice i nije admin samog sebe -->
-        <form th:if="${!user.hasActiveLoans and user.username != #authentication.name}"
+        <form th:if="${!user.hasActiveLoans and !user.hadLoans and user.username != #authentication.name}"
               th:action="@{'/users/delete/' + ${user.id}}"
-              method="post" style="display:inline-block;">
+              method="post"
+              style="display:inline-block;">
           <button type="submit" th:text="#{users.deleteBtn}">Obriši</button>
         </form>
 
-        <!-- Poruka ako ne može da se obriše -->
-        <span th:if="${user.hasActiveLoans}" style="color: gray; font-style: italic;"
-              th:text="#{users.cannotDeleteLoan}">Ne može se obrisati - ima aktivne pozajmice</span>
+        <span th:if="${user.hasActiveLoans}"
+              th:text="#{users.cannotDeleteLoan}">
+</span>
 
-        <!-- Poruka ako admin pokušava da obriše samog sebe -->
-        <span th:if="${user.username == #authentication.name}" style="color: gray; font-style: italic;"
-              th:text="#{users.cannotDeleteSelf}">Ne možete obrisati sebe</span>
+        <span th:if="${!user.hasActiveLoans and user.hadLoans}"
+              th:text="#{users.hadLoans}">
+</span>
+
+        <span th:if="${user.username == #authentication.name}"
+              th:text="#{users.cannotDeleteSelf}">
+</span>
       </td>
     </tr>
     </tbody>

@@ -82,10 +82,18 @@ public class UserService implements UserDetailsService {
         User user = getUserById(id)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
-        // Provera da li korisnik ima aktivne pozajmice
-        boolean hasActiveLoans = loanRepository.existsByUserAndReturnedFalse(user);
-        if (hasActiveLoans) {
-            throw new IllegalStateException("Korisnik ima aktivne pozajmice i ne može biti obrisan");
+        // 1️⃣ Aktivne pozajmice
+        if (loanRepository.existsByUserAndReturnedFalse(user)) {
+            throw new IllegalStateException(
+                    "Korisnik ima aktivne pozajmice i ne može biti obrisan"
+            );
+        }
+
+        // 2️⃣ IMAO pozajmice ranije
+        if (loanRepository.existsByUser(user)) {
+            throw new IllegalStateException(
+                    "Korisnik je imao pozajmice i ne može biti obrisan"
+            );
         }
 
         userRepository.delete(user);
@@ -97,22 +105,33 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
     public List<UserViewDto> getAllUsersForView() {
+
         return userRepository.findAll().stream()
                 .map(user -> {
 
-                    String roleLabel = user.getRoles().stream()
-                            .anyMatch(r -> r.getName() == RoleName.ADMIN)
+                    // ✔️ Role label (ADMIN ili USER)
+                    String roleLabel = user.getRoles() != null &&
+                            user.getRoles().stream()
+                                    .anyMatch(r -> r.getName() == RoleName.ADMIN)
                             ? "admin"
                             : "user";
+
+                    // ✔️ Pozajmice
+                    boolean hasActiveLoans =
+                            loanRepository.existsByUserAndReturnedFalse(user);
+
+                    boolean hadLoans =
+                            loanRepository.existsByUser(user);
 
                     return UserViewDto.builder()
                             .id(user.getId())
                             .username(user.getUsername())
                             .email(user.getEmail())
-                            .role(roleLabel)  // ovo ide u tabelu
+                            .role(roleLabel)
                             .active(user.isActive())
                             .blocked(user.isBlocked())
-                            .hasActiveLoans(loanRepository.existsByUserAndReturnedFalse(user))
+                            .hasActiveLoans(hasActiveLoans)
+                            .hadLoans(hadLoans)
                             .build();
                 })
                 .toList();

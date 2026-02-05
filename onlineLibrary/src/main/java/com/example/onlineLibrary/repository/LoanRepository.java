@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 
+    boolean existsByUser(User user);
 
     boolean existsByUserAndReturnedFalse(User user);
 
