@@ -133,7 +133,7 @@ Fajlovi:
   - ne mogu pozajmljivati nove knjige
   - mogu vratiti već pozajmljene knjige
     
-- Admin ima dozvolu da briše knjige ili korisnike koji nisu imali pozajmice.
+- Admin ima dozvolu da briše knjige ili korisnike koji nikad nisu imali pozajmice.
  
 - Admin ne može brisati knjigu koja je trenutno pozajmljena.
  
@@ -143,8 +143,9 @@ Fajlovi:
   
 - Ako se pokrene onlineLibrary bez prethodnog pokretanja LibraryMicroservice-a izlazi poruka da LibraryMicroservice trenutno nije dostupan.
   
-- Ako je neka knjiga bila pozajmljena, pa vraćena, a zatim obrisana iz baze, njen naslov će se i dalje pojavljivati u listi 'Sve pozajmice', ali će pored njega posati '(obrisano)'.
-  Te knjige više neće biti u library_db bazi, ali će ostati u online_library bazi u tabeli 'loans'. U listingu 'Sve knjige', te knjige više neće biti.
+- Ako je neka knjiga bila pozajmljena, pa vraćena, a zatim obrisana iz baze, njen naslov će se i dalje pojavljivati u listi 'Sve pozajmice', ali će pored njega pisati '(obrisano)'.
+  Te knjige više neće biti u library_db bazi, ali će ostati u online_library bazi u tabeli 'loans'.
+  U listingu 'Sve knjige', te knjige više neće biti.
 
 - I admin-u i običnom korisniku omogućena je promena korisničkog imena, preko forme.
 
@@ -156,8 +157,8 @@ Fajlovi:
 
 - Unit testovi
 - Integration testovi
-- Poseban `test` profil
-- Posebna Security konfiguracija za testove
+- Poseban `test` profil za neke testove
+- Posebna Security konfiguracija za neke testove
 
 Testirani su:
 - REST endpoint-i
@@ -177,7 +178,7 @@ Testirani su:
 - Thymeleaf
 - REST API
 - MariaDB
-- ModelMapper (u LibraryMicroservice -> BookService -> createFromDto()-samo za prosta polja, za relacije mapiranje je ručno.
+- ModelMapper (u LibraryMicroservice -> BookService -> createFromDto()-samo za prosta polja, za relacije mapiranje je ručno)
 - H2 (test)
 - JUnit 5 / Mockito
 ---
